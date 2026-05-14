@@ -2,18 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { ITask } from "../task.type";
-import { deleteTaskAction } from "../task.action";
+import { deleteTaskAction, toggleTaskStatusAction } from "../task.action";
 
 export function TaskItem({ task }: { task: ITask }) {
-  function handleToggleTaskStatus(taskId: string) {
-    // const newTasks = tasks.map((t) => {
-    //   if (t.id === taskId) {
-    //     t.status = t.status === "todo" ? "done" : "todo";
-    //   }
-    //   return t;
-    // });
-    // setTasks(newTasks);
-    console.log({ taskId });
+  async function handleToggleTaskStatus(taskId: string) {
+    await toggleTaskStatusAction(taskId);
   }
 
   async function handleDeleteTask(taskId: string) {
@@ -39,7 +32,10 @@ export function TaskItem({ task }: { task: ITask }) {
       >
         {task.title}
       </div>
-      <Button size={"icon"} onClick={() => handleDeleteTask(task.id)}>
+      <Button
+        size={"icon"}
+        onClick={async () => await handleDeleteTask(task.id)}
+      >
         Del
       </Button>
     </div>

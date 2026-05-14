@@ -30,3 +30,12 @@ export const createTask = async (taskData: ITaskInput) => {
 export const deleteTask = async (taskId: string) => {
   tasks = tasks.filter((t) => t.id !== taskId);
 };
+
+export const toggleTaskStatus = async (taskId: string) => {
+  tasks = tasks.map((t) => {
+    if (t.id === taskId) {
+      t.status = t.status === "done" ? "todo" : "done";
+    }
+    return t;
+  });
+};
