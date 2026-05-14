@@ -3,3 +3,7 @@ export type ITask = {
   title: string;
   status: "done" | "todo";
 };
+
+export type ITaskInput = {
+  title: string;
+};
