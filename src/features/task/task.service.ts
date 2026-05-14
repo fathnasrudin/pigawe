@@ -2,7 +2,7 @@ import { ITask, ITaskInput } from "./task.type";
 
 const generateId = () => crypto.randomUUID();
 
-const tasks: ITask[] = [
+let tasks: ITask[] = [
   {
     id: generateId(),
     title: "Makan siang",
@@ -25,4 +25,8 @@ export const createTask = async (taskData: ITaskInput) => {
   };
 
   tasks.push(newTask);
+};
+
+export const deleteTask = async (taskId: string) => {
+  tasks = tasks.filter((t) => t.id !== taskId);
 };

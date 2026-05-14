@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ITask } from "../task.type";
+import { deleteTaskAction } from "../task.action";
 
 export function TaskItem({ task }: { task: ITask }) {
   function handleToggleTaskStatus(taskId: string) {
@@ -15,10 +16,8 @@ export function TaskItem({ task }: { task: ITask }) {
     console.log({ taskId });
   }
 
-  function handleDeleteTask(taskId: string) {
-    // const newTasks = tasks.filter((t) => t.id !== taskId);
-    // setTasks(newTasks);
-    console.log(`delete ${taskId}`);
+  async function handleDeleteTask(taskId: string) {
+    await deleteTaskAction(taskId);
   }
 
   return (
