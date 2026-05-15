@@ -1,4 +1,5 @@
 import { getSessionServer } from "@/features/auth/auth.service";
+import { SignoutButton } from "./signout-button";
 
 export default async function ProtectedPage() {
   const session = await getSessionServer();
@@ -8,6 +9,7 @@ export default async function ProtectedPage() {
     <div>
       <p>user: {session.user.email}</p>
       <p>protected page</p>
+      <SignoutButton />
     </div>
   );
 }
