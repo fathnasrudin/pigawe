@@ -16,6 +16,9 @@ model Task {
   id     String     @id @default(uuid())
   title  String
   status TaskStatus
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 enum TaskStatus {
@@ -33,6 +36,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  tasks         Task[]
 
   @@unique([email])
   @@map("user")

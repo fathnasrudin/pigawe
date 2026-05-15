@@ -1,10 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import { ITaskInput } from "./task.type";
+import { getSessionServer } from "../auth/auth.service";
 
 export const getTasks = async () => prisma.task.findMany();
 
 export const createTask = async (taskData: ITaskInput) => {
-  await prisma.task.create({ data: { status: "todo", title: taskData.title } });
+  const session = await getSessionServer();
+  const userId = session.user.id;
+  await prisma.task.create({
+    data: { status: "todo", title: taskData.title, userId },
+  });
 };
 
 export const deleteTask = async (taskId: string) => {
