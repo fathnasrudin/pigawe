@@ -1,41 +1,21 @@
-import { ITask, ITaskInput } from "./task.type";
+import { prisma } from "@/lib/prisma";
+import { ITaskInput } from "./task.type";
 
-const generateId = () => crypto.randomUUID();
-
-let tasks: ITask[] = [
-  {
-    id: generateId(),
-    title: "Makan siang",
-    status: "todo",
-  },
-  {
-    id: generateId(),
-    title: "Makan malam",
-    status: "todo",
-  },
-];
-
-export const getTasks = async () => tasks;
+export const getTasks = async () => prisma.task.findMany();
 
 export const createTask = async (taskData: ITaskInput) => {
-  const newTask: ITask = {
-    id: generateId(),
-    title: taskData.title,
-    status: "todo",
-  };
-
-  tasks.push(newTask);
+  await prisma.task.create({ data: { status: "todo", title: taskData.title } });
 };
 
 export const deleteTask = async (taskId: string) => {
-  tasks = tasks.filter((t) => t.id !== taskId);
+  await prisma.task.delete({ where: { id: taskId } });
 };
 
 export const toggleTaskStatus = async (taskId: string) => {
-  tasks = tasks.map((t) => {
-    if (t.id === taskId) {
-      t.status = t.status === "done" ? "todo" : "done";
-    }
-    return t;
+  const task = await prisma.task.findUniqueOrThrow({ where: { id: taskId } });
+  const updatedStatus = task.status === "todo" ? "done" : "todo";
+  await prisma.task.update({
+    where: { id: taskId },
+    data: { status: updatedStatus },
   });
 };
