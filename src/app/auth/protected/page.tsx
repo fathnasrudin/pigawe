@@ -1,8 +1,8 @@
-import { getSessionServer } from "@/features/auth/auth.service";
+import { getSessionOrNull } from "@/features/auth/auth.service";
 import { SignoutButton } from "./signout-button";
 
 export default async function ProtectedPage() {
-  const session = await getSessionServer();
+  const session = await getSessionOrNull();
   if (!session) return <p>Not Logged In</p>;
 
   return (

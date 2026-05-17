@@ -10,6 +10,13 @@ export async function getSessionServer() {
   return session;
 }
 
+export async function getSessionOrNull() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  return session;
+}
+
 export async function requireUser() {
   try {
     const session = await getSessionServer();
