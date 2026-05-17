@@ -2,8 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { ITaskInput } from "./task.type";
 import { getSessionServer } from "../auth/auth.service";
 
-export const getTasks = async () => prisma.task.findMany();
+export const getTasks = async () => {
+  const session = await getSessionServer();
+  const userId = session.user.id;
 
+  return prisma.task.findMany({ where: { userId } });
+};
 export const createTask = async (taskData: ITaskInput) => {
   const session = await getSessionServer();
   const userId = session.user.id;
@@ -13,11 +17,20 @@ export const createTask = async (taskData: ITaskInput) => {
 };
 
 export const deleteTask = async (taskId: string) => {
-  await prisma.task.delete({ where: { id: taskId } });
+  const session = await getSessionServer();
+  const userId = session.user.id;
+
+  await prisma.task.delete({ where: { id: taskId, userId } });
 };
 
 export const toggleTaskStatus = async (taskId: string) => {
-  const task = await prisma.task.findUniqueOrThrow({ where: { id: taskId } });
+  const session = await getSessionServer();
+  const userId = session.user.id;
+
+  const task = await prisma.task.findUniqueOrThrow({
+    where: { id: taskId, userId },
+  });
+
   const updatedStatus = task.status === "todo" ? "done" : "todo";
   await prisma.task.update({
     where: { id: taskId },
