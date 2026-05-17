@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const initialDraft = {
@@ -27,6 +28,7 @@ const initialDraft = {
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [draft, setDraft] = useState(initialDraft);
+  const router = useRouter();
 
   async function handleSubmit() {
     console.log({ draft });
@@ -46,7 +48,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         },
         onSuccess: (ctx) => {
           //redirect to the dashboard or sign in page
-          console.log("onSuccess");
+          router.push("/");
         },
         onError: (ctx) => {
           // display the error message
