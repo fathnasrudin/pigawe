@@ -15,7 +15,9 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { ROUTES } from "@/constants/routes";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -149,7 +151,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 </Button>
 
                 <FieldDescription className="px-6 text-center">
-                  Already have an account? <a href="#">Sign in</a>
+                  Already have an account?{" "}
+                  <Link href={ROUTES.auth.signin.path}>Sign in</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
