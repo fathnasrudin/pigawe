@@ -3,6 +3,7 @@ export const ROUTES = {
     path: "/",
   },
   auth: {
+    path: "/auth",
     signin: {
       path: "/auth/signin",
     },
