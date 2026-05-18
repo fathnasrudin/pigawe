@@ -1,20 +1,31 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { AsyncButton } from "@/components/ui/async-button";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function SignoutButton() {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
   return (
-    <Button
+    <AsyncButton
+      isLoading={isLoading}
       variant={"secondary"}
       onClick={async () => {
-        await authClient.signOut();
+        try {
+          setIsLoading(true);
+          await authClient.signOut();
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsLoading(false);
+        }
         router.refresh();
       }}
     >
       Logout
-    </Button>
+    </AsyncButton>
   );
 }

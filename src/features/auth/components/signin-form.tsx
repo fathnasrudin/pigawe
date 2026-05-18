@@ -1,5 +1,6 @@
 "use client";
 
+import { AsyncButton } from "@/components/ui/async-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,6 +21,7 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 
 const initialDraft = {
   email: "",
@@ -29,6 +31,7 @@ const initialDraft = {
 export function SignInForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [draft, setDraft] = useState(initialDraft);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit() {
     console.log({ draft });
@@ -42,14 +45,17 @@ export function SignInForm({ ...props }: React.ComponentProps<typeof Card>) {
         onRequest: (ctx) => {
           //show loading
           // return <p>loading...</p>
+          setIsLoading(true);
           console.log("onRequest");
         },
         onSuccess: (ctx) => {
           //redirect to the dashboard or sign in page
+          setIsLoading(false);
           router.push("/");
         },
         onError: (ctx) => {
           // display the error message
+          setIsLoading(false);
           console.log(ctx.error);
           alert(ctx.error.message);
         },
@@ -103,7 +109,13 @@ export function SignInForm({ ...props }: React.ComponentProps<typeof Card>) {
 
             <FieldGroup>
               <Field>
-                <Button type="submit">Sign in</Button>
+                <AsyncButton
+                  isLoading={isLoading}
+                  loadingText="Signing In"
+                  type="submit"
+                >
+                  Sign in
+                </AsyncButton>
 
                 <Button variant="outline" type="button">
                   Sign in with Google
