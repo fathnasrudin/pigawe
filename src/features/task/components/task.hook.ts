@@ -89,6 +89,30 @@ export function useToggleTask() {
 
       return updateTaskClient({ taskId, data: { status: newStatus } });
     },
+    onMutate: async ({ taskId, data }, context) => {
+      await context.client.cancelQueries({ queryKey: ["tasks"] });
+
+      // snapshot
+      const prevTasks = context.client.getQueryData<Task[]>(["tasks"]) || [];
+
+      // optimistic
+      const newTasks = prevTasks.map((t) => {
+        if (t.id === taskId) {
+          const newStatus = data.status === "todo" ? "done" : "todo";
+          t.status = newStatus;
+        }
+        return t;
+      });
+
+      // set optimistic
+      context.client.setQueryData(["tasks"], newTasks);
+
+      // return snapshot for rollback
+      return { prevTasks };
+    },
+    onError(error, variables, onMutateResult, context) {
+      context.client.setQueryData(["tasks"], onMutateResult?.prevTasks);
+    },
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
