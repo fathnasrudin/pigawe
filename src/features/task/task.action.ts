@@ -29,14 +29,36 @@ export const createTaskAction = async (
   }
 };
 
-export const deleteTaskAction = async (taskId: string) => {
-  await deleteTask(taskId);
-
-  refresh();
+export const deleteTaskAction = async (
+  taskId: string,
+): Promise<ActionResponse> => {
+  try {
+    await deleteTask(taskId);
+    refresh();
+    return { ok: true };
+  } catch (error) {
+    let message;
+    if (error instanceof Error) {
+      message = error.message;
+    } else {
+      message = "Something went wrong in the server";
+    }
+    return { ok: false, message };
+  }
 };
 
 export const toggleTaskStatusAction = async (taskId: string) => {
-  await toggleTaskStatus(taskId);
-
-  refresh();
+  try {
+    await toggleTaskStatus(taskId);
+    refresh();
+    return { ok: true };
+  } catch (error) {
+    let message;
+    if (error instanceof Error) {
+      message = error.message;
+    } else {
+      message = "Something went wrong in the server";
+    }
+    return { ok: false, message };
+  }
 };
