@@ -5,29 +5,74 @@ import {
   fetchTasks,
   updateTaskClient,
 } from "../task.api.client";
+import { Task } from "../task.schema";
 
 export function useFetchTasks() {
   return useQuery({ queryKey: ["tasks"], queryFn: fetchTasks });
 }
 
 export function useCreateTask() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: createTaskClient,
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+
+    // optimistic update
+    onMutate: async (taskData, context) => {
+      // cancel running update for this query key, to avoid overwrite optimistic update
+      await context.client.cancelQueries({ queryKey: ["tasks"] });
+
+      // snapshot for rollback
+      const prevTasks = context.client.getQueryData<Task[]>(["tasks"]);
+
+      const optimisticTask: Task = {
+        id: crypto.randomUUID(),
+        title: taskData.title,
+        status: "todo",
+        userId: crypto.randomUUID(),
+      };
+
+      // set optimistic update
+      context.client.setQueryData(["tasks"], (old: Task[]) => [
+        ...old,
+        optimisticTask,
+      ]);
+
+      // old data untuk rollback
+      return { prevTasks };
+    },
+    onError: async (error, taskData, onMutateResult, context) => {
+      // kalo error, ganti lagi tasks yg optimistic dengan prev tasks
+      context.client.setQueryData(["tasks"], onMutateResult?.prevTasks);
+    },
+    onSettled: async (data, error, taskData, onMutateResult, context) => {
+      context.client.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 }
 
 export function useDeleteTask() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: deleteTaskClient,
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    onMutate: async (taskId, context) => {
+      // cancel running update for this query key, to avoid overwrite optimistic update
+      await context.client.cancelQueries({ queryKey: ["tasks"] });
+
+      // snapshot for rollback
+      const prevTasks = context.client.getQueryData<Task[]>(["tasks"]) || [];
+
+      const optimisticTasks: Task[] = prevTasks?.filter((t) => t.id !== taskId);
+
+      // set optimistic update
+      context.client.setQueryData(["tasks"], optimisticTasks);
+
+      // old data untuk rollback
+      return { prevTasks };
+    },
+    onError(error, variables, onMutateResult, context) {
+      // rollback
+      context.client.setQueryData(["tasks"], onMutateResult?.prevTasks);
+    },
+    onSettled: async (data, error, taskData, onMutateResult, context) => {
+      context.client.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 }
