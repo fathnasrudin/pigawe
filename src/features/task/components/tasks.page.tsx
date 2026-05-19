@@ -1,13 +1,12 @@
 import { requireUser } from "@/features/auth/auth.service";
-import { getTasks } from "../task.service";
 import { AddTaskForm } from "./add-task-form";
-import { TaskList } from "./task-list";
 import { SignoutButton } from "@/app/auth/protected/signout-button";
+import { TaskListClient } from "./task-list.client";
 
 export async function TasksPage() {
   const user = await requireUser();
 
-  const tasks = await getTasks();
+  // const tasks = await getTasks();
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col gap-6">
       {/* Profile */}
@@ -23,7 +22,7 @@ export async function TasksPage() {
       <AddTaskForm />
 
       {/* task list */}
-      <TaskList tasks={tasks} />
+      <TaskListClient />
     </div>
   );
 }
