@@ -2,11 +2,18 @@
 
 import { refresh } from "next/cache";
 import { createTask, deleteTask, toggleTaskStatus } from "./task.service";
+import { createTaskInputSchema } from "./task.schema";
 
 export const createTaskAction = async (formData: FormData) => {
-  const title = formData.get("title") as string;
+  const body = Object.fromEntries(formData.entries());
+  const { success, data, error } = createTaskInputSchema.safeParse(body);
 
-  await createTask({ title });
+  if (!success) {
+    // should handle this kind error later
+    console.log(error);
+  } else {
+    await createTask(data);
+  }
 
   refresh();
 };
