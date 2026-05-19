@@ -2,14 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import { ITask } from "../task.type";
-import { toggleTaskStatusAction } from "../task.action";
-import { useDeleteTask } from "./task.hook";
+import { useDeleteTask, useToggleTask } from "./task.hook";
+import { Task } from "../task.schema";
 
 export function TaskItem({ task }: { task: ITask }) {
   const deleteTask = useDeleteTask();
+  const toggleTask = useToggleTask();
 
-  async function handleToggleTaskStatus(taskId: string) {
-    await toggleTaskStatusAction(taskId);
+  async function handleToggleTaskStatus(
+    taskId: string,
+    currentStatus: Task["status"],
+  ) {
+    toggleTask.mutate({ taskId, data: { status: currentStatus } });
   }
 
   async function handleDeleteTask(taskId: string) {
@@ -24,7 +28,7 @@ export function TaskItem({ task }: { task: ITask }) {
       <input
         type="checkbox"
         checked={task.status === "done"}
-        onChange={() => handleToggleTaskStatus(task.id)}
+        onChange={() => handleToggleTaskStatus(task.id, task.status)}
       />
 
       <div

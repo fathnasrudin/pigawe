@@ -1,4 +1,8 @@
-import { createTaskInputSchema, Task } from "./task.schema";
+import {
+  createTaskInputSchema,
+  Task,
+  UpdateTaskInputSchema,
+} from "./task.schema";
 import { ITask } from "./task.type";
 
 export async function fetchTasks() {
@@ -42,5 +46,27 @@ export async function deleteTaskClient(taskId: Task["id"]) {
     throw new Error("Bad Response");
   }
 
+  return res.json();
+}
+
+export async function updateTaskClient({
+  taskId,
+  data,
+}: {
+  taskId: Task["id"];
+  data: UpdateTaskInputSchema;
+}) {
+  const path = `/api/tasks/${taskId}`;
+
+  const res = await fetch(`${path}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const badData = await res.json();
+    console.log({ badData });
+    throw new Error("Bad Response");
+  }
   return res.json();
 }

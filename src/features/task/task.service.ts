@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { ITaskInput } from "./task.type";
 import { getSessionServer } from "../auth/auth.service";
+import { UpdateTaskInputSchema } from "./task.schema";
 
 export const getTasks = async () => {
   const session = await getSessionServer();
@@ -35,5 +36,18 @@ export const toggleTaskStatus = async (taskId: string) => {
   await prisma.task.update({
     where: { id: taskId },
     data: { status: updatedStatus },
+  });
+};
+
+export const updateTask = async (
+  taskId: string,
+  data: UpdateTaskInputSchema,
+) => {
+  const session = await getSessionServer();
+  const userId = session.user.id;
+
+  await prisma.task.update({
+    where: { id: taskId, userId },
+    data,
   });
 };
