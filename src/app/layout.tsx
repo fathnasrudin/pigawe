@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { WhatsNewProvider } from "@/features/whats-new/components/whats-new-provider";
 import { QueryClientProvider } from "@/lib/tanstack-query/query-client.provider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -43,6 +44,7 @@ export default function RootLayout({
         <QueryClientProvider>
           <WhatsNewProvider />
           {children}
+          <ReactQueryDevtools />
         </QueryClientProvider>
       </body>
     </html>
