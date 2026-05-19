@@ -2,15 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import { ITask } from "../task.type";
-import { deleteTaskAction, toggleTaskStatusAction } from "../task.action";
+import { toggleTaskStatusAction } from "../task.action";
+import { useDeleteTask } from "./task.hook";
 
 export function TaskItem({ task }: { task: ITask }) {
+  const deleteTask = useDeleteTask();
+
   async function handleToggleTaskStatus(taskId: string) {
     await toggleTaskStatusAction(taskId);
   }
 
   async function handleDeleteTask(taskId: string) {
-    await deleteTaskAction(taskId);
+    deleteTask.mutate(taskId);
   }
 
   return (

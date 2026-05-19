@@ -1,10 +1,9 @@
-import { createTaskInputSchema } from "./task.schema";
+import { createTaskInputSchema, Task } from "./task.schema";
 import { ITask } from "./task.type";
 
 export async function fetchTasks() {
-  const BASE = "http://localhost:3000";
   const path = "/api/tasks";
-  const res = await fetch(`${BASE}${path}`);
+  const res = await fetch(`${path}`);
   if (!res.ok) {
     const badData = await res.json();
     console.log({ badData });
@@ -15,9 +14,8 @@ export async function fetchTasks() {
 }
 
 export async function createTaskClient(taskData: createTaskInputSchema) {
-  const BASE = "http://localhost:3000";
   const path = "/api/tasks";
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetch(`${path}`, {
     body: JSON.stringify(taskData),
     method: "post",
   });
@@ -30,4 +28,19 @@ export async function createTaskClient(taskData: createTaskInputSchema) {
 
   const data: ITask[] = await res.json();
   return data;
+}
+
+export async function deleteTaskClient(taskId: Task["id"]) {
+  const path = `/api/tasks/${taskId}`;
+  const res = await fetch(`${path}`, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    const badData = await res.json();
+    console.log({ badData });
+    throw new Error("Bad Response");
+  }
+
+  return res.json();
 }
