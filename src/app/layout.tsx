@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { WhatsNewProvider } from "@/features/whats-new/components/whats-new-provider";
+import { QueryClientProvider } from "@/lib/tanstack-query/query-client.provider";
 
 const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -39,8 +40,10 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <WhatsNewProvider />
-        {children}
+        <QueryClientProvider>
+          <WhatsNewProvider />
+          {children}
+        </QueryClientProvider>
       </body>
     </html>
   );
