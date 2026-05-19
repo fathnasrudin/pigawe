@@ -1,5 +1,5 @@
 import { requireUser } from "@/features/auth/auth.service";
-import { AddTaskForm } from "./add-task-form";
+import { AddTaskFormClient } from "./add-task-form.client";
 import { SignoutButton } from "@/app/auth/protected/signout-button";
 import { TaskListClient } from "./task-list.client";
 
@@ -19,7 +19,7 @@ export async function TasksPage() {
       </div>
 
       {/* Add Task Form */}
-      <AddTaskForm />
+      <AddTaskFormClient />
 
       {/* task list */}
       <TaskListClient />
