@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { ITaskInput } from "./task.type";
 import { getSessionServer } from "../auth/auth.service";
-import { UpdateTaskInputSchema } from "./task.schema";
+import { createTaskInputSchema, UpdateTaskInputSchema } from "./task.schema";
 
 export const getTasks = async () => {
   const session = await getSessionServer();
@@ -9,12 +8,19 @@ export const getTasks = async () => {
 
   return prisma.task.findMany({ where: { userId } });
 };
-export const createTask = async (taskData: ITaskInput) => {
+
+export const createTask = async (taskData: createTaskInputSchema) => {
   const session = await getSessionServer();
   const userId = session.user.id;
-  await prisma.task.create({
-    data: { status: "todo", title: taskData.title, userId },
+
+  const createdTask = await prisma.task.create({
+    data: {
+      ...taskData,
+      status: "todo",
+      userId,
+    },
   });
+  console.log({ serviceTaskData: taskData, createdTask });
 };
 
 export const deleteTask = async (taskId: string) => {
