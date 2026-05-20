@@ -31,6 +31,8 @@ export function useCreateTask() {
         title: taskData.title,
         status: "todo",
         userId: crypto.randomUUID(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       // set optimistic update
