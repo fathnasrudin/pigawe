@@ -29,7 +29,10 @@ export function AddTaskFormClient() {
           e.preventDefault();
 
           createTask.mutate(taskDraft);
+
+          // reset states
           setTaskDraft(initialTaskDraft);
+          setDate(undefined);
         }}
       >
         <div className="flex-1">
