@@ -3,7 +3,6 @@ import {
   Task,
   UpdateTaskInputSchema,
 } from "./task.schema";
-import { ITask } from "./task.type";
 
 export async function fetchTasks() {
   const path = "/api/tasks";
@@ -13,7 +12,7 @@ export async function fetchTasks() {
     console.log({ badData });
     throw new Error("Bad Response");
   }
-  const data: ITask[] = await res.json();
+  const data: Task[] = await res.json();
   return data;
 }
 
@@ -30,7 +29,7 @@ export async function createTaskClient(taskData: createTaskInputSchema) {
     throw new Error("Bad Response");
   }
 
-  const data: ITask[] = await res.json();
+  const data: Task[] = await res.json();
   return data;
 }
 
