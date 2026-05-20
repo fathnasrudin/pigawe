@@ -33,6 +33,7 @@ export function useCreateTask() {
         userId: crypto.randomUUID(),
         createdAt: new Date(),
         updatedAt: new Date(),
+        dueDate: null,
       };
 
       // set optimistic update

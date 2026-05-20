@@ -5,13 +5,18 @@ export const taskSchema = z.object({
   userId: z.string(),
   status: z.enum(["todo", "done"]),
   title: z.string().min(1),
+  dueDate: z.coerce.date().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
 
-export const createTaskInputSchema = z.object({
-  title: z.string().min(1),
-});
+export const createTaskInputSchema = taskSchema
+  .pick({
+    title: true,
+    dueDate: true,
+  })
+  .partial()
+  .required({ title: true });
 
 export const updateTaskInputSchema = taskSchema
   .pick({

@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useCreateTask } from "./task.hook";
 import { DatePickerTime } from "@/components/date-picker-time";
+import { createTaskInputSchema } from "../task.schema";
 
-const initialTaskDraft = { title: "" };
+const initialTaskDraft: createTaskInputSchema = { title: "" };
 
 export function AddTaskFormClient() {
   const [taskDraft, setTaskDraft] = useState(() => initialTaskDraft);
@@ -12,7 +13,12 @@ export function AddTaskFormClient() {
   const createTask = useCreateTask();
 
   useEffect(() => {
-    console.log({ date });
+    if (!date) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTaskDraft({ ...taskDraft, dueDate: date });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
   return (
