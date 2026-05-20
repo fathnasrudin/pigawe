@@ -23,6 +23,38 @@ export function DatePickerTime({
 }) {
   const [open, setOpen] = React.useState(false);
 
+  function handleDateChange(newDate?: Date) {
+    if (!date) {
+      setDate(newDate);
+      return;
+    }
+    if (!newDate) {
+      setDate(undefined);
+      return;
+    }
+
+    const next = new Date(date);
+    next.setFullYear(newDate.getFullYear());
+    next.setMonth(newDate.getMonth());
+    next.setDate(newDate.getDate());
+
+    setDate(next);
+  }
+
+  function handleTimeChange(time: string) {
+    if (!date) return;
+    console.log({ date });
+
+    const [hours, minutes, seconds] = time.split(":").map(Number);
+    const next = new Date(date);
+    next.setHours(hours);
+    next.setMinutes(minutes);
+    next.setSeconds(seconds);
+    console.log({ hours, minutes, seconds, next });
+
+    setDate(next);
+  }
+
   return (
     <FieldGroup className="mx-auto max-w-xs flex-row">
       <Field>
@@ -47,7 +79,7 @@ export function DatePickerTime({
               captionLayout="dropdown"
               defaultMonth={date}
               onSelect={(date) => {
-                setDate(date);
+                handleDateChange(date);
                 setOpen(false);
               }}
             />
@@ -60,8 +92,13 @@ export function DatePickerTime({
           type="time"
           id="time-picker-optional"
           step="1"
-          defaultValue={date && "10:30:00"}
+          value={(date && format(date, "HH:mm:ss")) || ""}
           className="appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+          disabled={!date}
+          onChange={(e) => {
+            e.preventDefault();
+            handleTimeChange(e.target.value);
+          }}
         />
       </Field>
     </FieldGroup>

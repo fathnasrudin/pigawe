@@ -1,13 +1,19 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCreateTask } from "./task.hook";
+import { DatePickerTime } from "@/components/date-picker-time";
 
 const initialTaskDraft = { title: "" };
 
 export function AddTaskFormClient() {
   const [taskDraft, setTaskDraft] = useState(() => initialTaskDraft);
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const createTask = useCreateTask();
+
+  useEffect(() => {
+    console.log({ date });
+  }, [date]);
 
   return (
     <div>
@@ -20,16 +26,21 @@ export function AddTaskFormClient() {
           setTaskDraft(initialTaskDraft);
         }}
       >
-        <input
-          name="title"
-          className="flex-1 border-b-2"
-          type="text"
-          placeholder="your task"
-          value={taskDraft.title}
-          onChange={(e) => {
-            setTaskDraft({ ...taskDraft, title: e.target.value });
-          }}
-        />
+        <div className="flex-1">
+          <input
+            name="title"
+            className="border-b-2"
+            type="text"
+            placeholder="your task"
+            value={taskDraft.title}
+            onChange={(e) => {
+              setTaskDraft({ ...taskDraft, title: e.target.value });
+            }}
+          />
+
+          <DatePickerTime date={date} setDate={setDate} />
+        </div>
+
         <Button
           size={"sm"}
           variant={"default"}
