@@ -54,7 +54,7 @@ export function AddTaskFormClient() {
           size={"sm"}
           variant={"default"}
           type="submit"
-          disabled={createTask.isPending}
+          disabled={createTask.isPending || !taskDraft.title}
         >
           Create
         </Button>
