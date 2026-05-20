@@ -1,11 +1,35 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ITask } from "../task.type";
 import { useDeleteTask, useToggleTask } from "./task.hook";
 import { Task } from "../task.schema";
+import { format } from "date-fns";
 
-export function TaskItem({ task }: { task: ITask }) {
+function getDisplayDate(date: Date) {
+  let formatStr = "d MMM yyyy";
+
+  const isCurrentYear =
+    new Date(date).getFullYear() === new Date().getFullYear();
+  if (isCurrentYear) formatStr = "d MMM";
+
+  return format(date, formatStr);
+}
+
+function getIsOverdue(date: Date) {
+  return new Date(date) <= new Date();
+}
+
+export function DueDate({ date }: { date: Date }) {
+  return (
+    <div
+      className={`${getIsOverdue(date) ? "text-red-600" : "text-gray-600"} text-xs flex gap-2 w-fit`}
+    >
+      <time>{getDisplayDate(date)}</time>
+    </div>
+  );
+}
+
+export function TaskItem({ task }: { task: Task }) {
   const deleteTask = useDeleteTask();
   const toggleTask = useToggleTask();
 
@@ -31,13 +55,16 @@ export function TaskItem({ task }: { task: ITask }) {
         onChange={() => handleToggleTaskStatus(task.id, task.status)}
       />
 
-      <div
-        className={`
-                flex-1
+      <div className="flex-1 flex flex-col gap-1">
+        <div
+          className={`
+                
                 ${task.status === "done" && "line-through"}
               `}
-      >
-        {task.title}
+        >
+          {task.title}
+        </div>
+        {task.dueDate && <DueDate date={task.dueDate} />}
       </div>
       <Button
         size={"icon"}
