@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { WhatsNewProvider } from "@/features/whats-new/components/whats-new-provider";
 import { QueryClientProvider } from "@/lib/tanstack-query/query-client.provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -42,9 +43,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <QueryClientProvider>
-          <WhatsNewProvider />
-          {children}
-          <ReactQueryDevtools />
+          <TooltipProvider>
+            <WhatsNewProvider />
+            {children}
+            <ReactQueryDevtools />
+          </TooltipProvider>
         </QueryClientProvider>
       </body>
     </html>
