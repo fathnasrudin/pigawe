@@ -82,6 +82,8 @@ export function DatePickerTime({
                 handleDateChange(date);
                 setOpen(false);
               }}
+              startMonth={new Date(new Date().getFullYear() - 10, 0)}
+              endMonth={new Date(new Date().getFullYear() + 10, 11)}
             />
           </PopoverContent>
         </Popover>
