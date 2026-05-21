@@ -3,6 +3,7 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
@@ -16,6 +17,8 @@ import { ProfileDropdown } from "./profile-dropdown";
 import Link from "next/link";
 import { ROUTES } from "@/constants/routes";
 import { usePathname } from "next/navigation";
+import { APP_VERSION } from "@/lib/version";
+import { Separator } from "../separator";
 
 export function AppSidebarHeader() {
   return (
@@ -88,6 +91,10 @@ export function AppSidebar() {
     <Sidebar>
       <AppSidebarHeader />
       <AppSidebarContent />
+      <SidebarFooter>
+        <Separator />
+        <div className="text-sm font-bold text-center">{`v${APP_VERSION}`}</div>
+      </SidebarFooter>
     </Sidebar>
   );
 }
