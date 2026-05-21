@@ -56,9 +56,9 @@ export function DatePickerTime({
   }
 
   return (
-    <FieldGroup className="mx-auto max-w-xs flex-row">
+    <FieldGroup className="mx-auto max-w-xs flex flex-col gap-1">
       <Field>
-        <FieldLabel htmlFor="date-picker-optional">Date</FieldLabel>
+        <FieldLabel htmlFor="date-picker-optional">Deadline</FieldLabel>
         <Popover open={open} onOpenChange={setOpen}>
           {/* trigger */}
           <PopoverTrigger asChild>
@@ -86,8 +86,7 @@ export function DatePickerTime({
           </PopoverContent>
         </Popover>
       </Field>
-      <Field className="w-32">
-        <FieldLabel htmlFor="time-picker-optional">Time</FieldLabel>
+      <Field className="w-32 gap-1">
         <Input
           type="time"
           id="time-picker-optional"

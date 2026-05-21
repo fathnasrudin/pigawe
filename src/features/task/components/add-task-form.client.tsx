@@ -35,7 +35,7 @@ export function AddTaskFormClient() {
           setDate(undefined);
         }}
       >
-        <div className="flex-1">
+        <div className="flex-1 space-y-8">
           <input
             name="title"
             className="border-b-2"
