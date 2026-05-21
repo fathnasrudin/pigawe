@@ -18,10 +18,16 @@ export function TaskListClient() {
   const { data: tasks, isLoading, error } = useFetchTasks();
 
   const separatedTasks = {
-    overdue: tasks?.filter((t) => t.dueDate && getIsOverdue(t.dueDate)) || [],
-    noDeadline: tasks?.filter((t) => !t.dueDate) || [],
+    done: tasks?.filter((t) => t.status === "done") || [],
+    overdue:
+      tasks?.filter(
+        (t) => t.status !== "done" && t.dueDate && getIsOverdue(t.dueDate),
+      ) || [],
+    noDeadline: tasks?.filter((t) => t.status !== "done" && !t.dueDate) || [],
     notOverdue:
-      tasks?.filter((t) => t.dueDate && !getIsOverdue(t.dueDate)) || [],
+      tasks?.filter(
+        (t) => t.status !== "done" && t.dueDate && !getIsOverdue(t.dueDate),
+      ) || [],
   };
 
   const sortedTasks = [
@@ -34,10 +40,19 @@ export function TaskListClient() {
   if (error) return <p>{error.message}</p>;
   if (!tasks) return <p>Data Not Found</p>;
   return (
-    <div className="flex flex-col gap-1">
-      {sortedTasks.map((task) => (
-        <TaskItem key={task.id} task={task} />
-      ))}
+    <div className="space-y-1">
+      <div className="flex flex-col gap-1">
+        {sortedTasks.map((task) => (
+          <TaskItem key={task.id} task={task} />
+        ))}
+      </div>
+
+      {/* done */}
+      <div className="flex flex-col gap-1">
+        {separatedTasks.done.map((task) => (
+          <TaskItem key={task.id} task={task} />
+        ))}
+      </div>
     </div>
   );
 }
