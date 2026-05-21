@@ -6,7 +6,10 @@ export const getTasks = async () => {
   const session = await getSessionServer();
   const userId = session.user.id;
 
-  return prisma.task.findMany({ where: { userId } });
+  return prisma.task.findMany({
+    where: { userId },
+    orderBy: { dueDate: "asc" },
+  });
 };
 
 export const createTask = async (taskData: createTaskInputSchema) => {
