@@ -1,6 +1,10 @@
 export const ROUTES = {
   home: {
-    path: "/",
+    path: "/app",
+  },
+  task: {
+    today: { path: "/app/today" },
+    inbox: { path: "/app/inbox" },
   },
   auth: {
     path: "/auth",
