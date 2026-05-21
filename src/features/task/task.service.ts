@@ -1,13 +1,23 @@
 import { prisma } from "@/lib/prisma";
 import { getSessionServer } from "../auth/auth.service";
-import { createTaskInputSchema, UpdateTaskInputSchema } from "./task.schema";
+import {
+  createTaskInputSchema,
+  TaskSearchParamsSchema,
+  UpdateTaskInputSchema,
+} from "./task.schema";
+import { transformTaskSearchParamsToDB } from "./task.utils";
 
-export const getTasks = async () => {
+export const getTasks = async (options?: {
+  searchParams?: TaskSearchParamsSchema;
+}) => {
   const session = await getSessionServer();
   const userId = session.user.id;
 
+  const findTasksOptions = transformTaskSearchParamsToDB(options?.searchParams);
+
   return prisma.task.findMany({
-    where: { userId },
+    ...findTasksOptions,
+    where: { ...findTasksOptions.where, userId },
     orderBy: { dueDate: "asc" },
   });
 };

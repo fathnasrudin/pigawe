@@ -22,7 +22,7 @@ export function AddTaskFormClient() {
   }, [date]);
 
   return (
-    <div>
+    <div className="flex-1">
       <form
         className="p-4 border rounded-sm flex gap-4"
         onSubmit={(e) => {
