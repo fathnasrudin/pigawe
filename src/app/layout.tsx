@@ -49,7 +49,7 @@ export default function RootLayout({
             <WhatsNewProvider />
             <SidebarProvider>
               <AppSidebar />
-              <main>
+              <main className="flex-1 w-full">
                 <SidebarTrigger />
                 {children}
               </main>

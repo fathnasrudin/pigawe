@@ -40,7 +40,7 @@ export function TaskListClient() {
   if (error) return <p>{error.message}</p>;
   if (!tasks) return <p>Data Not Found</p>;
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 w-full">
       <div className="flex flex-col gap-1">
         {sortedTasks.map((task) => (
           <TaskItem key={task.id} task={task} />
