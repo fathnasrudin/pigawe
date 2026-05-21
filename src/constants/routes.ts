@@ -5,6 +5,8 @@ export const ROUTES = {
   task: {
     today: { path: "/app/today" },
     inbox: { path: "/app/inbox" },
+    upcoming: { path: "/app/upcoming" },
+    overdue: { path: "/app/overdue" },
   },
   auth: {
     path: "/auth",

@@ -7,6 +7,7 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
@@ -31,11 +32,20 @@ export function AppSidebarHeader() {
 const filterMenuItem = [
   {
     title: "Inbox",
-    path: ROUTES.task.inbox.path,
+    path: "#",
+    badge: "coming soon",
   },
   {
     title: "Today",
     path: ROUTES.task.today.path,
+  },
+  {
+    title: "Overdue",
+    path: ROUTES.task.overdue.path,
+  },
+  {
+    title: "Upcoming",
+    path: ROUTES.task.upcoming.path,
   },
 ];
 
@@ -61,6 +71,9 @@ export function AppSidebarContent() {
                     <span>{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
+                {item.badge && (
+                  <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                )}
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
