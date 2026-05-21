@@ -1,5 +1,16 @@
 export const CHANGELOG = [
   {
+    version: "0.4.0",
+    date: "2026-05-21",
+    title: "Update Mei 2026",
+    changes: [
+      "new feature - sidebar: Now you have sidebar",
+      "sidebar: Move your profile to sidebar",
+      "sidebar: Add predefined tasks filter in sidebar",
+      "Fix and small improvements",
+    ],
+  },
+  {
     version: "0.3.0",
     date: "2026-05-21",
     title: "Update Mei 2026",
