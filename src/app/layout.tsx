@@ -7,7 +7,7 @@ import { QueryClientProvider } from "@/lib/tanstack-query/query-client.provider"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/ui/app-sidebar";
 
 const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
