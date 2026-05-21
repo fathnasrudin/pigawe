@@ -1,5 +1,15 @@
 export const CHANGELOG = [
   {
+    version: "0.3.0",
+    date: "2026-05-21",
+    title: "Update Mei 2026",
+    changes: [
+      "UX: Faster Create, Update, and Delete task with optimistic update",
+      "task-duedate (New Feature): Now you can set due date. Never miss your schedule anymore",
+      "Fix and small improvements",
+    ],
+  },
+  {
     version: "0.2.0",
     date: "2026-05-17",
     title: "Update Mei 2026",
