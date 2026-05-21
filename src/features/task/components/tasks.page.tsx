@@ -8,7 +8,7 @@ export async function TasksPage() {
 
   // const tasks = await getTasks();
   return (
-    <div className="w-full md:max-w-md mx-auto p-4 flex flex-col gap-6">
+    <div className="w-full mx-auto p-4 flex flex-col gap-6">
       {/* Profile */}
       <div className="flex gap-4 items-center">
         <div className="h-8 w-8 rounded-full bg-yellow-200 flex items-center justify-center">

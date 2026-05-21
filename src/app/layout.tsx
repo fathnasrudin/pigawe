@@ -6,6 +6,8 @@ import { WhatsNewProvider } from "@/features/whats-new/components/whats-new-prov
 import { QueryClientProvider } from "@/lib/tanstack-query/query-client.provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -45,7 +47,13 @@ export default function RootLayout({
         <QueryClientProvider>
           <TooltipProvider>
             <WhatsNewProvider />
-            {children}
+            <SidebarProvider>
+              <AppSidebar />
+              <main>
+                <SidebarTrigger />
+                {children}
+              </main>
+            </SidebarProvider>
             <ReactQueryDevtools />
           </TooltipProvider>
         </QueryClientProvider>
