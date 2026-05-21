@@ -1,12 +1,25 @@
 import {
   createTaskInputSchema,
   Task,
+  TaskSearchParamsSchema,
   UpdateTaskInputSchema,
 } from "./task.schema";
 
-export async function fetchTasks() {
-  const path = "/api/tasks";
+function buildTaskQueryParams(searchParams?: TaskSearchParamsSchema) {
+  let query = "";
+  if (!searchParams) return query;
+
+  if (searchParams.dueDate) query += `dueDate=${searchParams.dueDate}`;
+  return query;
+}
+
+export async function fetchTasks(options?: {
+  searchParams?: TaskSearchParamsSchema;
+}) {
+  const query = buildTaskQueryParams(options?.searchParams);
+  const path = `/api/tasks${query ? `?${query}` : ""}`;
   const res = await fetch(`${path}`);
+
   if (!res.ok) {
     const badData = await res.json();
     console.log({ badData });

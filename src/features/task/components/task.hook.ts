@@ -5,11 +5,16 @@ import {
   fetchTasks,
   updateTaskClient,
 } from "../task.api.client";
-import { Task } from "../task.schema";
+import { Task, TaskSearchParamsSchema } from "../task.schema";
 import { QUERY_KEYS } from "@/constants/query-keys";
 
-export function useFetchTasks() {
-  return useQuery({ queryKey: QUERY_KEYS.tasks.key, queryFn: fetchTasks });
+export function useFetchTasks(options?: {
+  searchParams?: TaskSearchParamsSchema;
+}) {
+  return useQuery({
+    queryKey: QUERY_KEYS.tasks.key,
+    queryFn: () => fetchTasks(options),
+  });
 }
 
 export function useCreateTask() {

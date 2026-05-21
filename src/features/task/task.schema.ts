@@ -10,6 +10,11 @@ export const taskSchema = z.object({
   updatedAt: z.date(),
 });
 
+export const taskSearchParamsSchema = z.object({
+  dueDate: z.enum(["today", "upcoming", "overdue"]).optional(),
+});
+export type TaskSearchParamsSchema = z.infer<typeof taskSearchParamsSchema>;
+
 export const createTaskInputSchema = taskSchema
   .pick({
     title: true,
