@@ -3,21 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useDeleteTask, useToggleTask } from "./task.hook";
 import { Task } from "../task.schema";
-import { format } from "date-fns";
-
-function getDisplayDate(date: Date) {
-  let formatStr = "d MMM yyyy";
-
-  const isCurrentYear =
-    new Date(date).getFullYear() === new Date().getFullYear();
-  if (isCurrentYear) formatStr = "d MMM";
-
-  return format(date, formatStr);
-}
-
-function getIsOverdue(date: Date) {
-  return new Date(date) <= new Date();
-}
+import { getDisplayDate, getIsOverdue } from "@/lib/date";
 
 export function DueDate({ date }: { date: Date }) {
   return (
