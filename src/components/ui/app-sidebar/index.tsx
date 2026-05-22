@@ -5,7 +5,9 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
@@ -19,6 +21,7 @@ import { ROUTES } from "@/constants/routes";
 import { usePathname } from "next/navigation";
 import { APP_VERSION } from "@/lib/version";
 import { Separator } from "../separator";
+import { Plus } from "lucide-react";
 
 export function AppSidebarHeader() {
   return (
@@ -52,6 +55,29 @@ const filterMenuItem = [
   },
 ];
 
+const projects = [
+  {
+    id: crypto.randomUUID(),
+    title: "Home",
+    path: "#",
+  },
+  {
+    id: crypto.randomUUID(),
+    title: "Weatheria",
+    path: "#",
+  },
+  {
+    id: crypto.randomUUID(),
+    title: "Pigawe",
+    path: "#",
+  },
+  {
+    id: crypto.randomUUID(),
+    title: "Dagang",
+    path: "#",
+  },
+];
+
 export function AppSidebarContent() {
   const pathname = usePathname();
 
@@ -77,6 +103,31 @@ export function AppSidebarContent() {
                 {item.badge && (
                   <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
                 )}
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      {/* Group Project */}
+      <SidebarGroup>
+        <SidebarGroupLabel>Projects</SidebarGroupLabel>
+        <SidebarGroupAction
+          onClick={() => {
+            console.log("TODO. Should Show A Form");
+          }}
+        >
+          <Plus /> <span className="sr-only">Add Project</span>
+        </SidebarGroupAction>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {projects.map((p) => (
+              <SidebarMenuItem key={p.id}>
+                <SidebarMenuButton asChild>
+                  <Link href={p.path}>
+                    <span>{p.title}</span>
+                  </Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
