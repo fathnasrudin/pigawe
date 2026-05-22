@@ -22,6 +22,14 @@ import { usePathname } from "next/navigation";
 import { APP_VERSION } from "@/lib/version";
 import { Separator } from "../separator";
 import { Plus } from "lucide-react";
+import { SetStateAction, useState } from "react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../collapsible";
+import { Input } from "../input";
+import { Button } from "../button";
 
 export function AppSidebarHeader() {
   return (
@@ -78,6 +86,77 @@ const projects = [
   },
 ];
 
+function SidebarCreateProjectForm({
+  setIsCreatingProject,
+}: {
+  setIsCreatingProject: React.Dispatch<SetStateAction<boolean>>;
+}) {
+  return (
+    <form
+      className="flex flex-col gap-2 border rounded-xl"
+      onSubmit={(e) => {
+        e.preventDefault();
+        setIsCreatingProject(false);
+
+        console.log("Should request project.create");
+      }}
+    >
+      <Input name="title" placeholder="Project Name" className="" />
+      <div className="self-end flex gap-2">
+        <Button
+          variant={"secondary"}
+          size={"sm"}
+          type="reset"
+          onClick={() => setIsCreatingProject(false)}
+        >
+          Cancel
+        </Button>
+        <Button size={"sm"} type="submit">
+          Create
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function SidebarProjectsGroup() {
+  const [isCreatingProject, setIsCreatingProject] = useState(false);
+
+  return (
+    <Collapsible open={isCreatingProject} onOpenChange={setIsCreatingProject}>
+      <SidebarGroup>
+        <SidebarGroupLabel>Projects</SidebarGroupLabel>
+        <CollapsibleTrigger asChild>
+          <SidebarGroupAction>
+            <Plus /> <span className="sr-only">Add Project</span>
+          </SidebarGroupAction>
+        </CollapsibleTrigger>
+
+        {/* form di sini? */}
+        <SidebarGroupContent>
+          <CollapsibleContent>
+            <SidebarCreateProjectForm
+              setIsCreatingProject={setIsCreatingProject}
+            />
+          </CollapsibleContent>
+
+          <SidebarMenu>
+            {projects.map((p) => (
+              <SidebarMenuItem key={p.id}>
+                <SidebarMenuButton asChild>
+                  <Link href={p.path}>
+                    <span>{p.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </Collapsible>
+  );
+}
+
 export function AppSidebarContent() {
   const pathname = usePathname();
 
@@ -109,30 +188,7 @@ export function AppSidebarContent() {
         </SidebarGroupContent>
       </SidebarGroup>
 
-      {/* Group Project */}
-      <SidebarGroup>
-        <SidebarGroupLabel>Projects</SidebarGroupLabel>
-        <SidebarGroupAction
-          onClick={() => {
-            console.log("TODO. Should Show A Form");
-          }}
-        >
-          <Plus /> <span className="sr-only">Add Project</span>
-        </SidebarGroupAction>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {projects.map((p) => (
-              <SidebarMenuItem key={p.id}>
-                <SidebarMenuButton asChild>
-                  <Link href={p.path}>
-                    <span>{p.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+      <SidebarProjectsGroup />
     </SidebarContent>
   );
 }
