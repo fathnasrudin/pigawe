@@ -1,11 +1,25 @@
+import { createProjectSchema } from "@/modules/project/project.schema";
+import { createProjectService } from "@/modules/project/project.service";
+
 export async function POST(req: Request) {
-  const body = await req.json();
-  console.log({ body });
+  try {
+    const body = await req.json();
+    console.log({ body });
 
-  //validate body
+    //validate body
+    const dataProject = createProjectSchema.parse(body);
 
-  // create project
+    // create project
+    const result = await createProjectService({ data: dataProject });
 
-  // return the created project
-  return Response.json({ success: true });
+    console.log({ routeResult: result });
+    // return the created project
+    return Response.json({ success: true, data: result });
+  } catch (error) {
+    // serahin ke error handler
+    return Response.json({
+      success: false,
+      message: "Something wen wrong",
+    });
+  }
 }
