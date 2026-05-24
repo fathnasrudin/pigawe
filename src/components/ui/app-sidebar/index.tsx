@@ -51,7 +51,7 @@ export function AppSidebarHeader() {
 const filterMenuItem = [
   {
     title: "Inbox",
-    path: "#",
+    path: ROUTES.task.inbox.path,
     badge: "coming soon",
   },
   {
