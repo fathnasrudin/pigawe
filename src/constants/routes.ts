@@ -20,4 +20,16 @@ export const ROUTES = {
       path: "/auth/signup",
     },
   },
+
+  // api
+  api: {
+    me: {
+      projects: {
+        path: "/api/me/projects",
+      },
+      defaultProject: {
+        path: "/api/me/default-project",
+      },
+    },
+  },
 };

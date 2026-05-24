@@ -4,7 +4,7 @@ import {
   getProjectsService,
 } from "@/modules/project/project.service";
 
-export async function POST(req: Request) {
+export async function createProjectRoute(req: Request) {
   try {
     const body = await req.json();
     console.log({ body });
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function getProjectsRoute() {
   const projects = await getProjectsService();
 
   return Response.json({

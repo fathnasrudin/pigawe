@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { CreateProjectInput, getProjectsSchema } from "./project.schema";
 import { QUERY_KEYS } from "@/constants/query-keys";
+import { ROUTES } from "@/constants/routes";
 
 export function useCreateProject() {
   return useMutation({
     mutationFn: async ({ data }: { data: CreateProjectInput }) => {
       // network call
-      const response = await fetch("/api/projects", {
+      const response = await fetch(ROUTES.api.me.projects.path, {
         method: "post",
         body: JSON.stringify(data),
       });
@@ -27,7 +28,7 @@ export function useFetchProjects() {
     queryKey: QUERY_KEYS.projects.all,
     queryFn: async () => {
       // network call
-      const response = await fetch("/api/projects", {
+      const response = await fetch(ROUTES.api.me.projects.path, {
         method: "get",
       });
 
