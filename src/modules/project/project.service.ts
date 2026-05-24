@@ -1,5 +1,6 @@
 import { requireUser } from "@/features/auth/auth.service";
 import { CreateProjectInput } from "./project.schema";
+import { prisma } from "@/lib/prisma";
 
 export function createProjectDomain({
   data,
@@ -12,7 +13,6 @@ export function createProjectDomain({
 
   return {
     // id: rightnow, id created in prisma or db
-    id: crypto.randomUUID(),
     ...data,
     userId,
   };
@@ -28,7 +28,8 @@ export async function createProjectService({
   const newProject = createProjectDomain({ data, userId: user.id });
 
   // save to db
+  const createdProject = await prisma.project.create({ data: newProject });
 
   //   return to user
-  return newProject;
+  return createdProject;
 }

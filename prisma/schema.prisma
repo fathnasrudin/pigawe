@@ -28,6 +28,14 @@ enum TaskStatus {
   done
 }
 
+model Project {
+  id        String  @id @default(ulid())
+  title     String
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  isDefault Boolean @default(false)
+}
+
 model User {
   id            String    @id
   name          String
@@ -39,6 +47,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   tasks         Task[]
+  projects      Project[]
 
   @@unique([email])
   @@map("user")
