@@ -30,6 +30,8 @@ import {
 } from "../collapsible";
 import { Input } from "../input";
 import { Button } from "../button";
+import { useCreateProject } from "@/modules/project/project.hook";
+import { createProjectSchema } from "@/modules/project/project.schema";
 
 export function AppSidebarHeader() {
   return (
@@ -91,6 +93,8 @@ function SidebarCreateProjectForm({
 }: {
   setIsCreatingProject: React.Dispatch<SetStateAction<boolean>>;
 }) {
+  const createProject = useCreateProject();
+
   return (
     <form
       className="flex flex-col gap-2 border rounded-xl"
@@ -98,7 +102,12 @@ function SidebarCreateProjectForm({
         e.preventDefault();
         setIsCreatingProject(false);
 
-        console.log("Should request project.create");
+        const formElement = e.target;
+        const formData = new FormData(formElement);
+        const dataObj = Object.fromEntries(formData.entries());
+        const dataProject = createProjectSchema.parse(dataObj);
+
+        createProject.mutate({ data: dataProject });
       }}
     >
       <Input name="title" placeholder="Project Name" className="" />
