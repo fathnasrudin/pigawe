@@ -33,3 +33,13 @@ export async function createProjectService({
   //   return to user
   return createdProject;
 }
+
+export async function getProjectsService() {
+  const user = await requireUser();
+
+  const projects = await prisma.project.findMany({
+    where: { userId: user.id },
+  });
+
+  return projects;
+}

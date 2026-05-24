@@ -7,6 +7,9 @@ export const ROUTES = {
     inbox: { path: "/app/inbox" },
     upcoming: { path: "/app/upcoming" },
     overdue: { path: "/app/overdue" },
+    byProject: {
+      buildPath: (projectId: string) => `/app/project/${projectId}`,
+    },
   },
   auth: {
     path: "/auth",

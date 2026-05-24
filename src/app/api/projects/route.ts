@@ -1,5 +1,8 @@
 import { createProjectSchema } from "@/modules/project/project.schema";
-import { createProjectService } from "@/modules/project/project.service";
+import {
+  createProjectService,
+  getProjectsService,
+} from "@/modules/project/project.service";
 
 export async function POST(req: Request) {
   try {
@@ -22,4 +25,13 @@ export async function POST(req: Request) {
       message: "Something wen wrong",
     });
   }
+}
+
+export async function GET() {
+  const projects = await getProjectsService();
+
+  return Response.json({
+    success: true,
+    data: projects,
+  });
 }

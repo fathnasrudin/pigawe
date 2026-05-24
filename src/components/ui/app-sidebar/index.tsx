@@ -30,7 +30,10 @@ import {
 } from "../collapsible";
 import { Input } from "../input";
 import { Button } from "../button";
-import { useCreateProject } from "@/modules/project/project.hook";
+import {
+  useCreateProject,
+  useFetchProjects,
+} from "@/modules/project/project.hook";
 import { createProjectSchema } from "@/modules/project/project.schema";
 
 export function AppSidebarHeader() {
@@ -62,29 +65,6 @@ const filterMenuItem = [
   {
     title: "Upcoming",
     path: ROUTES.task.upcoming.path,
-  },
-];
-
-const projects = [
-  {
-    id: crypto.randomUUID(),
-    title: "Home",
-    path: "#",
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Weatheria",
-    path: "#",
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Pigawe",
-    path: "#",
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Dagang",
-    path: "#",
   },
 ];
 
@@ -130,6 +110,27 @@ function SidebarCreateProjectForm({
 
 function SidebarProjectsGroup() {
   const [isCreatingProject, setIsCreatingProject] = useState(false);
+  const fetchProjects = useFetchProjects();
+  const pathname = usePathname();
+
+  function getIsActivePath(path: string) {
+    return pathname.startsWith(path);
+  }
+
+  if (fetchProjects.isLoading) return <p>loading...</p>;
+
+  // next handle error properly
+  if (fetchProjects.isError) return <p>error...</p>;
+
+  const isProjectEmpty = !fetchProjects.data || !fetchProjects.data.length;
+
+  const projectEmpty = (
+    <div className="py-8 px-4">
+      <span className="text-gray-400 text-sm text-center ">
+        No project found. Create your project
+      </span>
+    </div>
+  );
 
   return (
     <Collapsible open={isCreatingProject} onOpenChange={setIsCreatingProject}>
@@ -150,15 +151,22 @@ function SidebarProjectsGroup() {
           </CollapsibleContent>
 
           <SidebarMenu>
-            {projects.map((p) => (
-              <SidebarMenuItem key={p.id}>
-                <SidebarMenuButton asChild>
-                  <Link href={p.path}>
-                    <span>{p.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {isProjectEmpty
+              ? projectEmpty
+              : fetchProjects.data.map((p) => (
+                  <SidebarMenuItem key={p.id}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={getIsActivePath(
+                        ROUTES.task.byProject.buildPath(p.id),
+                      )}
+                    >
+                      <Link href={ROUTES.task.byProject.buildPath(p.id)}>
+                        <span>{p.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
