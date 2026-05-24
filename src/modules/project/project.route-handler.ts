@@ -1,6 +1,7 @@
 import { createProjectSchema } from "@/modules/project/project.schema";
 import {
   createProjectService,
+  getDefaultProjectService,
   getProjectsService,
 } from "@/modules/project/project.service";
 
@@ -33,5 +34,14 @@ export async function getProjectsRoute() {
   return Response.json({
     success: true,
     data: projects,
+  });
+}
+
+export async function getDefaultProjectRoute() {
+  const project = await getDefaultProjectService();
+
+  return Response.json({
+    success: true,
+    data: project,
   });
 }
