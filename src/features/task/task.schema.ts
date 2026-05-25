@@ -6,6 +6,7 @@ export const taskSchema = z.object({
   status: z.enum(["todo", "done"]),
   title: z.string().min(1),
   dueDate: z.coerce.date().nullable(),
+  projectId: z.string().min(1),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -19,9 +20,10 @@ export const createTaskInputSchema = taskSchema
   .pick({
     title: true,
     dueDate: true,
+    projectId: true,
   })
   .partial()
-  .required({ title: true });
+  .required({ title: true, projectId: true });
 
 export const updateTaskInputSchema = taskSchema
   .pick({

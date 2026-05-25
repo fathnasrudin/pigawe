@@ -39,6 +39,7 @@ export function useCreateTask() {
         createdAt: new Date(),
         updatedAt: new Date(),
         dueDate: null,
+        projectId: taskData.projectId,
       };
 
       // set optimistic update
