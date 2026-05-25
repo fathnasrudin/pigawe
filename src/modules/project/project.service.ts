@@ -34,6 +34,28 @@ export async function createProjectService({
   return createdProject;
 }
 
+async function initiateDefaultProjectMigration() {
+  const user = await requireUser();
+  // create default project
+  console.log("creating default project...");
+  const inbox = await createDefaultProject();
+  console.log("default project created");
+
+  // add initial tasks (for demo)
+
+  // find user tasks that projectId is null
+  console.log("Update all user tasks to have projectId");
+  await prisma.task.updateMany({
+    data: { projectId: inbox.id },
+    where: {
+      userId: user.id,
+      projectId: null,
+    },
+  });
+
+  return inbox;
+}
+
 async function createDefaultProject() {
   const user = await requireUser();
 
@@ -63,8 +85,7 @@ export async function getDefaultProjectService() {
   if (existDefaultProject) return existDefaultProject;
 
   // if default project not found, create default project
-  const newDefaultProject = await createDefaultProject();
-  return newDefaultProject;
+  return initiateDefaultProjectMigration();
 }
 
 export async function getProjectsService() {
