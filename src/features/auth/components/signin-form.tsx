@@ -51,7 +51,7 @@ export function SignInForm({ ...props }: React.ComponentProps<typeof Card>) {
         onSuccess: (ctx) => {
           //redirect to the dashboard or sign in page
           setIsLoading(false);
-          router.push("/");
+          router.push(ROUTES.home.path);
         },
         onError: (ctx) => {
           // display the error message

@@ -1,6 +1,6 @@
 export const ROUTES = {
   home: {
-    path: "/app",
+    path: "/app/today",
   },
   task: {
     all: { path: "/app/all" },
