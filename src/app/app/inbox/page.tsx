@@ -1,6 +1,5 @@
 "use client";
 
-import { AddTaskFormClient } from "@/features/task/components/add-task-form.client";
 import { TaskFormClient } from "@/features/task/components/task-form.client";
 import { TaskList } from "@/features/task/components/task-list";
 import { useFetchTasks } from "@/features/task/components/task.hook";
@@ -19,9 +18,7 @@ export default function TasksPage() {
   return (
     <div className="w-full">
       <div className="w-full max-w-2xl mx-auto p-4 flex flex-col gap-6">
-        <h1 className="text-3xl font-bold">
-          Inbox - {!fetchProject.data ? "loading" : fetchProject.data.id}
-        </h1>
+        <h1 className="text-3xl font-bold">Inbox</h1>
 
         {/* Add Task Form */}
         <TaskFormClient
