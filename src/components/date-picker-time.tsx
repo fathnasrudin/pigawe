@@ -56,7 +56,7 @@ export function DatePickerTime({
   }
 
   return (
-    <FieldGroup className="mx-auto max-w-xs flex flex-col gap-1">
+    <FieldGroup className="max-w-xs flex flex-col gap-1">
       <Field>
         <FieldLabel htmlFor="date-picker-optional">Deadline</FieldLabel>
         <Popover open={open} onOpenChange={setOpen}>

@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFetchProjects } from "@/modules/project/project.hook";
+import { Project } from "@/modules/project/project.schema";
 
 const initialTaskDraft: createTaskInputSchema = { title: "", projectId: "" };
 
@@ -37,58 +38,61 @@ export function TaskFormClient({
   }, [date]);
 
   return (
-    <div className="flex-1">
-      <form
-        className="p-4 border rounded-sm flex gap-4"
-        onSubmit={(e) => {
-          e.preventDefault();
+    <form
+      className="flex-1 p-2 border rounded-sm flex flex-col"
+      onSubmit={(e) => {
+        e.preventDefault();
 
-          createTask.mutate(taskDraft);
+        createTask.mutate(taskDraft);
 
-          // reset states
-          setTaskDraft(initialTaskDraft);
-          setDate(undefined);
-        }}
-      >
-        <div className="flex-1 space-y-8">
-          <input
-            name="title"
-            className="border-b-2"
-            type="text"
-            placeholder="your task"
-            value={taskDraft.title}
-            onChange={(e) => {
-              setTaskDraft({ ...taskDraft, title: e.target.value });
-            }}
-          />
+        // reset states
+        setTaskDraft(initialTaskDraft);
+        setDate(undefined);
+      }}
+    >
+      <div className="flex-1">
+        {/* Task Title Input */}
+        <input
+          name="title"
+          className="font-bold w-full"
+          type="text"
+          placeholder="your task"
+          value={taskDraft.title}
+          onChange={(e) => {
+            setTaskDraft({ ...taskDraft, title: e.target.value });
+          }}
+        />
 
-          <DatePickerTime date={date} setDate={setDate} />
+        <DatePickerTime date={date} setDate={setDate} />
+      </div>
 
-          {/* Select Project */}
-          <Select
-            name="projectId"
-            onValueChange={(value) =>
-              setTaskDraft({ ...taskDraft, projectId: value })
-            }
-            value={taskDraft.projectId}
-          >
-            <SelectTrigger className="w-80">
-              <SelectValue placeholder="select project" />
-            </SelectTrigger>
-            <SelectContent position="popper">
-              <SelectGroup>
-                <SelectLabel>Projects</SelectLabel>
-                {fetchProjects.data?.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
-                    {p.title}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+      {/* footer */}
+      <div className="flex gap-4">
+        {/* Select Project */}
+        <Select
+          name="projectId"
+          onValueChange={(value) =>
+            setTaskDraft({ ...taskDraft, projectId: value })
+          }
+          value={taskDraft.projectId}
+        >
+          <SelectTrigger className="w-80">
+            <SelectValue placeholder="select project" />
+          </SelectTrigger>
+          <SelectContent position="popper">
+            <SelectGroup>
+              <SelectLabel>Projects</SelectLabel>
+              {fetchProjects.data?.map((p) => (
+                <SelectItem key={p.id} value={p.id}>
+                  {p.title}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
         <Button
+          className="ml-auto"
           size={"sm"}
           variant={"default"}
           type="submit"
@@ -96,8 +100,7 @@ export function TaskFormClient({
         >
           {initialValues.title ? "Edit" : "Create"}
         </Button>
-      </form>
-      {/* {!state.ok && <p className="text-sm text-red-600">{state.message}</p>} */}
-    </div>
+      </div>
+    </form>
   );
 }
