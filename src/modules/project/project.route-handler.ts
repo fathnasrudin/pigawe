@@ -2,6 +2,7 @@ import { createProjectSchema } from "@/modules/project/project.schema";
 import {
   createProjectService,
   getDefaultProjectService,
+  getProjectByIdService,
   getProjectsService,
 } from "@/modules/project/project.service";
 
@@ -35,6 +36,35 @@ export async function getProjectsRoute() {
     success: true,
     data: projects,
   });
+}
+
+export async function getProjectByIdRoute(
+  _req: Request,
+  {
+    params,
+  }: {
+    params: Promise<{ id: string }>;
+  },
+) {
+  try {
+    const id = (await params).id;
+    const project = await getProjectByIdService(id);
+
+    return Response.json({
+      success: true,
+      data: project,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message: "Something went wrong",
+      },
+      { status: 500 },
+    );
+  }
 }
 
 export async function getDefaultProjectRoute() {

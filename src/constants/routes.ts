@@ -26,6 +26,9 @@ export const ROUTES = {
     me: {
       projects: {
         path: "/api/me/projects",
+        id: {
+          buildPath: (projectId: string) => `/api/me/projects/${projectId}`,
+        },
       },
       defaultProject: {
         path: "/api/me/default-project",

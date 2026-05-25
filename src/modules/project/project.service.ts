@@ -97,3 +97,10 @@ export async function getProjectsService() {
 
   return projects;
 }
+
+export async function getProjectByIdService(projectId: string) {
+  const user = await requireUser();
+  return prisma.project.findUnique({
+    where: { id: projectId, userId: user.id },
+  });
+}
