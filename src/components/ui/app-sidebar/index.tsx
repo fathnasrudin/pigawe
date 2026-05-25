@@ -153,20 +153,22 @@ function SidebarProjectsGroup() {
           <SidebarMenu>
             {isProjectEmpty
               ? projectEmpty
-              : fetchProjects.data.map((p) => (
-                  <SidebarMenuItem key={p.id}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={getIsActivePath(
-                        ROUTES.task.byProject.buildPath(p.id),
-                      )}
-                    >
-                      <Link href={ROUTES.task.byProject.buildPath(p.id)}>
-                        <span>{p.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+              : fetchProjects.data
+                  .filter((p) => p.isDefault === false)
+                  .map((p) => (
+                    <SidebarMenuItem key={p.id}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={getIsActivePath(
+                          ROUTES.task.byProject.buildPath(p.id),
+                        )}
+                      >
+                        <Link href={ROUTES.task.byProject.buildPath(p.id)}>
+                          <span>{p.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
