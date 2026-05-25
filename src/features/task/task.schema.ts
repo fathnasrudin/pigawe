@@ -14,6 +14,7 @@ export const taskSchema = z.object({
 
 export const taskSearchParamsSchema = z.object({
   dueDate: z.enum(["today", "upcoming", "overdue"]).optional(),
+  projectId: z.string().min(1).optional(),
 });
 export type TaskSearchParamsSchema = z.infer<typeof taskSearchParamsSchema>;
 

@@ -15,7 +15,7 @@ export function useFetchTasks(options?: {
   const queryClient = useQueryClient();
 
   return useQuery({
-    queryKey: QUERY_KEYS.tasks.key,
+    queryKey: QUERY_KEYS.tasks.options.buildKey(options),
 
     queryFn: async () => {
       const tasks = await fetchTasks(options);

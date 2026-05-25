@@ -1,6 +1,8 @@
 "use client";
 
 import { AddTaskFormClient } from "@/features/task/components/add-task-form.client";
+import { TaskList } from "@/features/task/components/task-list";
+import { useFetchTasks } from "@/features/task/components/task.hook";
 import { useFetchProjectById } from "@/modules/project/project.hook";
 import { use } from "react";
 
@@ -10,7 +12,8 @@ export default function TasksPage({
   params: Promise<{ id: string }>;
 }) {
   const { id: projectId } = use(params);
-  const { isLoading, data: project, isError } = useFetchProjectById(projectId);
+  const { isLoading, data: project } = useFetchProjectById(projectId);
+  const fetchTasks = useFetchTasks({ searchParams: { projectId } });
 
   return (
     <div className="w-full">
@@ -23,6 +26,13 @@ export default function TasksPage({
         <AddTaskFormClient />
 
         {/* task list */}
+        {isLoading ? (
+          "loading"
+        ) : !fetchTasks.data ? (
+          <p>task empty</p>
+        ) : (
+          <TaskList tasks={fetchTasks.data} />
+        )}
       </div>
     </div>
   );
