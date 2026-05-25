@@ -51,7 +51,13 @@ export function TaskItem({ task }: { task: Task }) {
           {task.title}
         </div>
         {task.dueDate && <DueDate date={task.dueDate} />}
+
+        {/* project name */}
+        <div className="text-gray-600 text-xs">
+          {task.project?.title || "Unknown"}
+        </div>
       </div>
+
       <Button
         size={"icon"}
         onClick={async () => await handleDeleteTask(task.id)}

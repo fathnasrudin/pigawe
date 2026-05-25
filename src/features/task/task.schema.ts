@@ -7,6 +7,7 @@ export const taskSchema = z.object({
   title: z.string().min(1),
   dueDate: z.coerce.date().nullable(),
   projectId: z.string().min(1),
+  project: z.object({ title: z.string() }).optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
