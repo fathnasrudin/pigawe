@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskFormClient } from "@/features/task/components/task-form.client";
+import { TaskForm } from "@/features/task/components/task-form";
 import { TaskList } from "@/features/task/components/task-list";
 import { useFetchTasks } from "@/features/task/components/task.hook";
 import { useFetchDefaultProject } from "@/modules/project/project.hook";
@@ -21,7 +21,7 @@ export default function TasksPage() {
         <h1 className="text-3xl font-bold">Inbox</h1>
 
         {/* Add Task Form */}
-        <TaskFormClient
+        <TaskForm
           initialValues={{ title: "", projectId: fetchInbox.data.id }}
         />
 

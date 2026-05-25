@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskFormClient } from "@/features/task/components/task-form.client";
+import { TaskForm } from "@/features/task/components/task-form";
 import { TaskList } from "@/features/task/components/task-list";
 import { useFetchTasks } from "@/features/task/components/task.hook";
 import { useFetchProjectById } from "@/modules/project/project.hook";
@@ -23,7 +23,7 @@ export default function TasksPage({
         </h1>
 
         {/* Add Task Form */}
-        <TaskFormClient initialValues={{ title: "", projectId }} />
+        <TaskForm initialValues={{ title: "", projectId }} />
 
         {/* task list */}
         {isLoading ? (

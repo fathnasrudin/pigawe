@@ -14,14 +14,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFetchProjects } from "@/modules/project/project.hook";
-import { Project } from "@/modules/project/project.schema";
 
 const initialTaskDraft: createTaskInputSchema = { title: "", projectId: "" };
 
-export function TaskFormClient({
+export function TaskForm({
   initialValues = initialTaskDraft,
 }: {
-  initialValues: createTaskInputSchema;
+  initialValues?: createTaskInputSchema;
 }) {
   const [taskDraft, setTaskDraft] = useState(() => initialValues);
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -46,7 +45,7 @@ export function TaskFormClient({
         createTask.mutate(taskDraft);
 
         // reset states
-        setTaskDraft(initialTaskDraft);
+        setTaskDraft(initialValues);
         setDate(undefined);
       }}
     >
