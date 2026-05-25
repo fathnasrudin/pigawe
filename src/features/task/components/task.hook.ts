@@ -7,13 +7,33 @@ import {
 } from "../task.api.client";
 import { Task, TaskSearchParamsSchema } from "../task.schema";
 import { QUERY_KEYS } from "@/constants/query-keys";
+import { Project } from "@/modules/project/project.schema";
 
 export function useFetchTasks(options?: {
   searchParams?: TaskSearchParamsSchema;
 }) {
+  const queryClient = useQueryClient();
+
   return useQuery({
-    queryKey: QUERY_KEYS.tasks.key,
-    queryFn: () => fetchTasks(options),
+    queryKey: QUERY_KEYS.tasks.options.buildKey(options),
+
+    queryFn: async () => {
+      const tasks = await fetchTasks(options);
+
+      // populate tasks with project object
+      const projects: Project[] | undefined = queryClient.getQueryData(
+        QUERY_KEYS.projects.all,
+      );
+
+      function getProjectName(projectId: string): string {
+        return projects?.find((p) => p.id === projectId)?.title || "Error";
+      }
+
+      return tasks.map((t) => ({
+        ...t,
+        project: { title: getProjectName(t.projectId) },
+      }));
+    },
   });
 }
 
@@ -39,6 +59,7 @@ export function useCreateTask() {
         createdAt: new Date(),
         updatedAt: new Date(),
         dueDate: null,
+        projectId: taskData.projectId,
       };
 
       // set optimistic update

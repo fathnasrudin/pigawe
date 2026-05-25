@@ -5,7 +5,9 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
@@ -19,6 +21,20 @@ import { ROUTES } from "@/constants/routes";
 import { usePathname } from "next/navigation";
 import { APP_VERSION } from "@/lib/version";
 import { Separator } from "../separator";
+import { Plus } from "lucide-react";
+import { SetStateAction, useState } from "react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../collapsible";
+import { Input } from "../input";
+import { Button } from "../button";
+import {
+  useCreateProject,
+  useFetchProjects,
+} from "@/modules/project/project.hook";
+import { createProjectSchema } from "@/modules/project/project.schema";
 
 export function AppSidebarHeader() {
   return (
@@ -32,12 +48,16 @@ export function AppSidebarHeader() {
   );
 }
 
-const filterMenuItem = [
+const filterMenuItem: { title: string; path: string; badge?: string }[] = [
+  {
+    title: "All",
+    path: ROUTES.task.all.path,
+  },
   {
     title: "Inbox",
-    path: "#",
-    badge: "coming soon",
+    path: ROUTES.task.inbox.path,
   },
+
   {
     title: "Today",
     path: ROUTES.task.today.path,
@@ -51,6 +71,114 @@ const filterMenuItem = [
     path: ROUTES.task.upcoming.path,
   },
 ];
+
+function SidebarCreateProjectForm({
+  setIsCreatingProject,
+}: {
+  setIsCreatingProject: React.Dispatch<SetStateAction<boolean>>;
+}) {
+  const createProject = useCreateProject();
+
+  return (
+    <form
+      className="flex flex-col gap-2 border rounded-xl"
+      onSubmit={(e) => {
+        e.preventDefault();
+        setIsCreatingProject(false);
+
+        const formElement = e.target;
+        const formData = new FormData(formElement);
+        const dataObj = Object.fromEntries(formData.entries());
+        const dataProject = createProjectSchema.parse(dataObj);
+
+        createProject.mutate({ data: dataProject });
+      }}
+    >
+      <Input name="title" placeholder="Project Name" className="" />
+      <div className="self-end flex gap-2">
+        <Button
+          variant={"secondary"}
+          size={"sm"}
+          type="reset"
+          onClick={() => setIsCreatingProject(false)}
+        >
+          Cancel
+        </Button>
+        <Button size={"sm"} type="submit">
+          Create
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function SidebarProjectsGroup() {
+  const [isCreatingProject, setIsCreatingProject] = useState(false);
+  const fetchProjects = useFetchProjects();
+  const pathname = usePathname();
+
+  function getIsActivePath(path: string) {
+    return pathname.startsWith(path);
+  }
+
+  if (fetchProjects.isLoading) return <p>loading...</p>;
+
+  // next handle error properly
+  if (fetchProjects.isError) return <p>error...</p>;
+
+  const isProjectEmpty = !fetchProjects.data || !fetchProjects.data.length;
+
+  const projectEmpty = (
+    <div className="py-8 px-4">
+      <span className="text-gray-400 text-sm text-center ">
+        No project found. Create your project
+      </span>
+    </div>
+  );
+
+  return (
+    <Collapsible open={isCreatingProject} onOpenChange={setIsCreatingProject}>
+      <SidebarGroup>
+        <SidebarGroupLabel>Projects</SidebarGroupLabel>
+        <CollapsibleTrigger asChild>
+          <SidebarGroupAction>
+            <Plus /> <span className="sr-only">Add Project</span>
+          </SidebarGroupAction>
+        </CollapsibleTrigger>
+
+        {/* form di sini? */}
+        <SidebarGroupContent>
+          <CollapsibleContent>
+            <SidebarCreateProjectForm
+              setIsCreatingProject={setIsCreatingProject}
+            />
+          </CollapsibleContent>
+
+          <SidebarMenu>
+            {isProjectEmpty
+              ? projectEmpty
+              : fetchProjects.data
+                  .filter((p) => p.isDefault === false)
+                  .map((p) => (
+                    <SidebarMenuItem key={p.id}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={getIsActivePath(
+                          ROUTES.task.byProject.buildPath(p.id),
+                        )}
+                      >
+                        <Link href={ROUTES.task.byProject.buildPath(p.id)}>
+                          <span>{p.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </Collapsible>
+  );
+}
 
 export function AppSidebarContent() {
   const pathname = usePathname();
@@ -82,6 +210,8 @@ export function AppSidebarContent() {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
+
+      <SidebarProjectsGroup />
     </SidebarContent>
   );
 }

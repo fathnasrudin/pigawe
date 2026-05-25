@@ -3,30 +3,30 @@
 import { TaskForm } from "@/features/task/components/task-form";
 import { TaskList } from "@/features/task/components/task-list";
 import { useFetchTasks } from "@/features/task/components/task.hook";
-import { useFetchDefaultProject } from "@/modules/project/project.hook";
+import { useFetchProjectById } from "@/modules/project/project.hook";
+import { use } from "react";
 
-export default function TasksPage() {
-  const fetchProject = useFetchDefaultProject();
-  // get default project
-  const fetchInbox = useFetchDefaultProject();
-  const fetchTasks = useFetchTasks({
-    searchParams: { projectId: fetchInbox.data?.id },
-  });
-
-  if (!fetchInbox.data) return <p>loading...</p>;
+export default function TasksPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id: projectId } = use(params);
+  const { isLoading, data: project } = useFetchProjectById(projectId);
+  const fetchTasks = useFetchTasks({ searchParams: { projectId } });
 
   return (
     <div className="w-full">
       <div className="w-full max-w-2xl mx-auto p-4 flex flex-col gap-6">
-        <h1 className="text-3xl font-bold">Inbox</h1>
+        <h1 className="text-3xl font-bold">
+          {isLoading ? "loading..." : project?.title}
+        </h1>
 
         {/* Add Task Form */}
-        <TaskForm
-          initialValues={{ title: "", projectId: fetchInbox.data.id }}
-        />
+        <TaskForm initialValues={{ title: "", projectId }} />
 
         {/* task list */}
-        {fetchTasks.isLoading ? (
+        {isLoading ? (
           "loading"
         ) : !fetchTasks.data ? (
           <p>task empty</p>

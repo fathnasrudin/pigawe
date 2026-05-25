@@ -6,11 +6,7 @@ import { TaskListSkeleton } from "@/features/task/components/task-list.client";
 import { useFetchTasks } from "@/features/task/components/task.hook";
 
 export default function TasksPage() {
-  const {
-    data: tasks,
-    isLoading,
-    error,
-  } = useFetchTasks({ searchParams: { dueDate: "overdue" } });
+  const { data: tasks, isLoading, error } = useFetchTasks({});
 
   if (!tasks) return <p>Task not found</p>;
   if (isLoading) return <TaskListSkeleton />;

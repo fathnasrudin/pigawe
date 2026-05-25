@@ -1,6 +1,6 @@
 "use client";
 
-import { AddTaskFormClient } from "@/features/task/components/add-task-form.client";
+import { TaskForm } from "@/features/task/components/task-form";
 import { TaskList } from "@/features/task/components/task-list";
 import { TaskListSkeleton } from "@/features/task/components/task-list.client";
 import { useFetchTasks } from "@/features/task/components/task.hook";
@@ -22,7 +22,7 @@ export default function TasksPage() {
         <h1 className="text-3xl font-bold">Today</h1>
 
         {/* Add Task Form */}
-        <AddTaskFormClient />
+        <TaskForm />
 
         {/* task list */}
         <TaskList tasks={tasks} />

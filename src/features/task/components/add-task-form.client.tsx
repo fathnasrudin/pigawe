@@ -4,13 +4,29 @@ import { useEffect, useState } from "react";
 import { useCreateTask } from "./task.hook";
 import { DatePickerTime } from "@/components/date-picker-time";
 import { createTaskInputSchema } from "../task.schema";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useFetchProjects } from "@/modules/project/project.hook";
 
-const initialTaskDraft: createTaskInputSchema = { title: "" };
+const initialTaskDraft: createTaskInputSchema = { title: "", projectId: "" };
 
 export function AddTaskFormClient() {
   const [taskDraft, setTaskDraft] = useState(() => initialTaskDraft);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const createTask = useCreateTask();
+  const fetchProjects = useFetchProjects();
+
+  //logger test
+  useEffect(() => {
+    console.log({ taskDraft });
+  }, [taskDraft]);
 
   useEffect(() => {
     if (!date) return;
@@ -48,6 +64,28 @@ export function AddTaskFormClient() {
           />
 
           <DatePickerTime date={date} setDate={setDate} />
+
+          {/* Select Project */}
+          <Select
+            name="projectId"
+            onValueChange={(value) =>
+              setTaskDraft({ ...taskDraft, projectId: value })
+            }
+          >
+            <SelectTrigger className="w-80">
+              <SelectValue placeholder="select project" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectGroup>
+                <SelectLabel>Projects</SelectLabel>
+                {fetchProjects.data?.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.title}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
         <Button

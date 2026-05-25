@@ -9,7 +9,8 @@ function buildTaskQueryParams(searchParams?: TaskSearchParamsSchema) {
   let query = "";
   if (!searchParams) return query;
 
-  if (searchParams.dueDate) query += `dueDate=${searchParams.dueDate}`;
+  query += new URLSearchParams(searchParams).toString();
+
   return query;
 }
 

@@ -3,10 +3,14 @@ export const ROUTES = {
     path: "/app",
   },
   task: {
+    all: { path: "/app/all" },
     today: { path: "/app/today" },
     inbox: { path: "/app/inbox" },
     upcoming: { path: "/app/upcoming" },
     overdue: { path: "/app/overdue" },
+    byProject: {
+      buildPath: (projectId: string) => `/app/project/${projectId}`,
+    },
   },
   auth: {
     path: "/auth",
@@ -15,6 +19,21 @@ export const ROUTES = {
     },
     signup: {
       path: "/auth/signup",
+    },
+  },
+
+  // api
+  api: {
+    me: {
+      projects: {
+        path: "/api/me/projects",
+        id: {
+          buildPath: (projectId: string) => `/api/me/projects/${projectId}`,
+        },
+      },
+      defaultProject: {
+        path: "/api/me/default-project",
+      },
     },
   },
 };
