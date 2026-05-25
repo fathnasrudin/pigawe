@@ -48,12 +48,16 @@ export function AppSidebarHeader() {
   );
 }
 
-const filterMenuItem = [
+const filterMenuItem: { title: string; path: string; badge?: string }[] = [
+  {
+    title: "All",
+    path: ROUTES.task.all.path,
+  },
   {
     title: "Inbox",
     path: ROUTES.task.inbox.path,
-    badge: "coming soon",
   },
+
   {
     title: "Today",
     path: ROUTES.task.today.path,

@@ -3,6 +3,7 @@ export const ROUTES = {
     path: "/app",
   },
   task: {
+    all: { path: "/app/all" },
     today: { path: "/app/today" },
     inbox: { path: "/app/inbox" },
     upcoming: { path: "/app/upcoming" },
