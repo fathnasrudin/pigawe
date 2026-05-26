@@ -1,20 +1,11 @@
 "use client";
 
 import { TaskForm } from "@/features/task/components/task-form";
-import { TaskList } from "@/features/task/components/task-list";
-import { TaskListSkeleton } from "@/features/task/components/task-list.client";
+import { TaskListWithFetch } from "@/features/task/components/task-list";
 import { useFetchTasks } from "@/features/task/components/task.hook";
 
 export default function TasksPage() {
-  const {
-    data: tasks,
-    isLoading,
-    error,
-  } = useFetchTasks({ searchParams: { dueDate: "overdue" } });
-
-  if (!tasks) return <p>Task not found</p>;
-  if (isLoading) return <TaskListSkeleton />;
-  if (error) return <p>Error</p>;
+  const fetchData = useFetchTasks({ searchParams: { dueDate: "overdue" } });
 
   return (
     <div className="w-full">
@@ -25,7 +16,7 @@ export default function TasksPage() {
         <TaskForm />
 
         {/* task list */}
-        <TaskList tasks={tasks} />
+        <TaskListWithFetch fetchData={fetchData} />
       </div>
     </div>
   );
