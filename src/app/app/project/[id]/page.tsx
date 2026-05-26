@@ -1,7 +1,7 @@
 "use client";
 
 import { TaskForm } from "@/features/task/components/task-form";
-import { TaskList } from "@/features/task/components/task-list";
+import { TaskListWithFetch } from "@/features/task/components/task-list";
 import { useFetchTasks } from "@/features/task/components/task.hook";
 import { useFetchProjectById } from "@/modules/project/project.hook";
 import { use } from "react";
@@ -26,13 +26,7 @@ export default function TasksPage({
         <TaskForm initialValues={{ title: "", projectId }} />
 
         {/* task list */}
-        {isLoading ? (
-          "loading"
-        ) : !fetchTasks.data ? (
-          <p>task empty</p>
-        ) : (
-          <TaskList tasks={fetchTasks.data} />
-        )}
+        <TaskListWithFetch fetchData={fetchTasks} />
       </div>
     </div>
   );

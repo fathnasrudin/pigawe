@@ -1,12 +1,11 @@
 "use client";
 
 import { TaskForm } from "@/features/task/components/task-form";
-import { TaskList } from "@/features/task/components/task-list";
+import { TaskListWithFetch } from "@/features/task/components/task-list";
 import { useFetchTasks } from "@/features/task/components/task.hook";
 import { useFetchDefaultProject } from "@/modules/project/project.hook";
 
 export default function TasksPage() {
-  const fetchProject = useFetchDefaultProject();
   // get default project
   const fetchInbox = useFetchDefaultProject();
   const fetchTasks = useFetchTasks({
@@ -26,13 +25,7 @@ export default function TasksPage() {
         />
 
         {/* task list */}
-        {fetchTasks.isLoading ? (
-          "loading"
-        ) : !fetchTasks.data ? (
-          <p>task empty</p>
-        ) : (
-          <TaskList tasks={fetchTasks.data} />
-        )}
+        <TaskListWithFetch fetchData={fetchTasks} />
       </div>
     </div>
   );

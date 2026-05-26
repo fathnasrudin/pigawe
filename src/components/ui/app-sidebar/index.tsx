@@ -21,7 +21,7 @@ import { ROUTES } from "@/constants/routes";
 import { usePathname } from "next/navigation";
 import { APP_VERSION } from "@/lib/version";
 import { Separator } from "../separator";
-import { Plus } from "lucide-react";
+import { Folder, FolderIcon, FrownIcon, Plus } from "lucide-react";
 import { SetStateAction, useState } from "react";
 import {
   Collapsible,
@@ -35,6 +35,8 @@ import {
   useFetchProjects,
 } from "@/modules/project/project.hook";
 import { createProjectSchema } from "@/modules/project/project.schema";
+import { Skeleton } from "../skeleton";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia } from "../empty";
 
 export function AppSidebarHeader() {
   return (
@@ -112,6 +114,42 @@ function SidebarCreateProjectForm({
   );
 }
 
+export function SidebarProjectsSkeleton() {
+  return (
+    <div className="w-full flex flex-col gap-2">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Skeleton key={i} className="h-6 w-full rounded-sm" />
+      ))}
+    </div>
+  );
+}
+
+export function SidebarProjectsEmpty() {
+  return (
+    <Empty className="text-muted-foreground">
+      <EmptyHeader>
+        <EmptyMedia>
+          <FolderIcon />
+        </EmptyMedia>
+        <EmptyDescription>No project found</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
+  );
+}
+
+export function SidebarProjectsError() {
+  return (
+    <Empty className="text-muted-foreground">
+      <EmptyHeader>
+        <EmptyMedia>
+          <FrownIcon />
+        </EmptyMedia>
+        <EmptyDescription>Failed to fetch project</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
+  );
+}
+
 function SidebarProjectsGroup() {
   const [isCreatingProject, setIsCreatingProject] = useState(false);
   const fetchProjects = useFetchProjects();
@@ -155,24 +193,30 @@ function SidebarProjectsGroup() {
           </CollapsibleContent>
 
           <SidebarMenu>
-            {isProjectEmpty
-              ? projectEmpty
-              : fetchProjects.data
-                  .filter((p) => p.isDefault === false)
-                  .map((p) => (
-                    <SidebarMenuItem key={p.id}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={getIsActivePath(
-                          ROUTES.task.byProject.buildPath(p.id),
-                        )}
-                      >
-                        <Link href={ROUTES.task.byProject.buildPath(p.id)}>
-                          <span>{p.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
+            {fetchProjects.isLoading ? (
+              <SidebarProjectsSkeleton />
+            ) : fetchProjects.isError ? (
+              <SidebarProjectsError />
+            ) : isProjectEmpty ? (
+              <SidebarProjectsEmpty />
+            ) : (
+              fetchProjects.data
+                .filter((p) => p.isDefault === false)
+                .map((p) => (
+                  <SidebarMenuItem key={p.id}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={getIsActivePath(
+                        ROUTES.task.byProject.buildPath(p.id),
+                      )}
+                    >
+                      <Link href={ROUTES.task.byProject.buildPath(p.id)}>
+                        <span>{p.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))
+            )}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
