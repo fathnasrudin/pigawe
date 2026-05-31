@@ -1,3 +1,6 @@
-import { TasksPage } from "@/features/task/components/tasks.page";
+import { ROUTES } from "@/constants/routes";
+import { permanentRedirect } from "next/navigation";
 
-export default TasksPage;
+export default function Root() {
+  permanentRedirect(ROUTES.home.path);
+}
