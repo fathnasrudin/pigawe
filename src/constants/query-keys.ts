@@ -2,14 +2,15 @@ import { TaskSearchParamsSchema } from "@/features/task/task.schema";
 
 export const QUERY_KEYS = {
   tasks: {
-    key: ["tasks"],
-    options: {
-      buildKey: (options?: { searchParams?: TaskSearchParamsSchema }) => {
-        if (options?.searchParams && Object.keys(options.searchParams).length)
-          return ["tasks", options.searchParams];
-        return ["tasks"];
-      },
+    all: ["tasks"] as const,
+    lists: () => [...QUERY_KEYS.tasks.all, "list"] as const,
+    list: (options?: { searchParams?: TaskSearchParamsSchema }) => {
+      if (options?.searchParams && Object.keys(options.searchParams).length)
+        return [...QUERY_KEYS.tasks.lists(), options.searchParams];
+      return [...QUERY_KEYS.tasks.lists()];
     },
+    details: () => [...QUERY_KEYS.tasks.all, "detail"] as const,
+    detail: (id: number) => [...QUERY_KEYS.tasks.details(), id] as const,
   },
   projects: {
     all: ["projects"],
