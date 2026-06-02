@@ -9,8 +9,13 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { CheckSquare2Icon, FrownIcon } from "lucide-react";
+import { CheckSquare2Icon, ChevronDownIcon, FrownIcon } from "lucide-react";
 import { useFetchTasks } from "./task.hook";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 export function TaskListSkeleton() {
   return (
@@ -87,11 +92,75 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
   );
 }
 
+export function TaskListWithSection({
+  sections,
+}: {
+  sections: {
+    id: string;
+    title: string;
+    tasks: Task[];
+    isCollapsible: boolean;
+  }[];
+}) {
+  return (
+    <div className="space-y-8 w-full">
+      {sections.map((s) => (
+        <section key={s.id}>
+          <Collapsible
+            defaultOpen
+            disabled={!s.isCollapsible}
+            className="space-y-2"
+          >
+            <CollapsibleTrigger asChild>
+              {s.title && (
+                <h2 className="flex flex-1 w-full items-center gap-4 group">
+                  {s.title}
+                  {s.isCollapsible && (
+                    <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
+                  )}
+                </h2>
+              )}
+            </CollapsibleTrigger>
+
+            <CollapsibleContent>
+              <div className="flex flex-col gap-1">
+                {s.tasks.map((task) => (
+                  <TaskItem key={task.id} task={task} />
+                ))}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </section>
+      ))}
+    </div>
+  );
+}
+
 export function TaskListWithFetch({
   fetchData,
 }: {
   fetchData: ReturnType<typeof useFetchTasks>;
 }) {
+  const separatedTasks = {
+    done: fetchData.data?.filter((t) => t.status === "done") || [],
+    overdue:
+      fetchData.data?.filter(
+        (t) => t.status !== "done" && t.dueDate && getIsOverdue(t.dueDate),
+      ) || [],
+    noDeadline:
+      fetchData.data?.filter((t) => t.status !== "done" && !t.dueDate) || [],
+    notOverdue:
+      fetchData.data?.filter(
+        (t) => t.status !== "done" && t.dueDate && !getIsOverdue(t.dueDate),
+      ) || [],
+  };
+
+  const sortedTasks = [
+    ...separatedTasks.overdue,
+    ...separatedTasks.noDeadline,
+    ...separatedTasks.notOverdue,
+  ];
+
   return (
     <>
       {/* task list */}
@@ -102,7 +171,22 @@ export function TaskListWithFetch({
       ) : !fetchData.data || !fetchData.data.length ? (
         <TaskListEmpty />
       ) : (
-        <TaskList tasks={fetchData.data} />
+        <TaskListWithSection
+          sections={[
+            {
+              id: crypto.randomUUID(),
+              title: "Todo",
+              tasks: sortedTasks,
+              isCollapsible: false,
+            },
+            {
+              id: crypto.randomUUID(),
+              title: "Done",
+              tasks: separatedTasks.done,
+              isCollapsible: true,
+            },
+          ]}
+        />
       )}
     </>
   );
