@@ -27,26 +27,28 @@ export function useCreateProject() {
   });
 }
 
+export async function fetchProjects() {
+  // network call
+  const response = await fetch(ROUTES.api.me.projects.path, {
+    method: "get",
+  });
+
+  // should handle error
+  if (!response.ok) {
+    throw new Error("Something when wrong in the server?");
+  }
+
+  // type result manual, next with zod validation
+  const result: { success: true; data: unknown } = await response.json();
+  const projects = getProjectsSchema.parse(result.data);
+
+  return projects;
+}
+
 export function useFetchProjects() {
   return useQuery({
     queryKey: QUERY_KEYS.projects.all,
-    queryFn: async () => {
-      // network call
-      const response = await fetch(ROUTES.api.me.projects.path, {
-        method: "get",
-      });
-
-      // should handle error
-      if (!response.ok) {
-        throw new Error("Something when wrong in the server?");
-      }
-
-      // type result manual, next with zod validation
-      const result: { success: true; data: unknown } = await response.json();
-      const projects = getProjectsSchema.parse(result.data);
-
-      return projects;
-    },
+    queryFn: fetchProjects,
   });
 }
 

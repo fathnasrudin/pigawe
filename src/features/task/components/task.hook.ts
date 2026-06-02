@@ -8,6 +8,7 @@ import {
 import { Task, TaskSearchParamsSchema } from "../task.schema";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { Project } from "@/modules/project/project.schema";
+import { fetchProjects } from "@/modules/project/project.hook";
 
 export function useFetchTasks(options?: {
   searchParams?: TaskSearchParamsSchema;
@@ -21,8 +22,8 @@ export function useFetchTasks(options?: {
       const tasks = await fetchTasks(options);
 
       // populate tasks with project object
-      const projects: Project[] | undefined = queryClient.getQueryData(
-        QUERY_KEYS.projects.all,
+      const projects: Project[] | undefined = await queryClient.ensureQueryData(
+        { queryKey: QUERY_KEYS.projects.all, queryFn: fetchProjects },
       );
 
       function getProjectName(projectId: string): string {
