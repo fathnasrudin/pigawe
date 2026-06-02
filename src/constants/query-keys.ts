@@ -5,7 +5,8 @@ export const QUERY_KEYS = {
     key: ["tasks"],
     options: {
       buildKey: (options?: { searchParams?: TaskSearchParamsSchema }) => {
-        if (options?.searchParams) return ["tasks", options.searchParams];
+        if (options?.searchParams && Object.keys(options.searchParams).length)
+          return ["tasks", options.searchParams];
         return ["tasks"];
       },
     },

@@ -58,15 +58,15 @@ export function useCreateTask() {
         userId: crypto.randomUUID(),
         createdAt: new Date(),
         updatedAt: new Date(),
-        dueDate: null,
+        dueDate: taskData.dueDate || null,
         projectId: taskData.projectId,
       };
 
       // set optimistic update
-      context.client.setQueryData(QUERY_KEYS.tasks.key, (old: Task[]) => [
-        ...old,
-        optimisticTask,
-      ]);
+      context.client.setQueriesData(
+        { queryKey: QUERY_KEYS.tasks.key },
+        (old: Task[]) => (old ? [...old, optimisticTask] : [optimisticTask]),
+      );
 
       // old data untuk rollback
       return { prevTasks };
