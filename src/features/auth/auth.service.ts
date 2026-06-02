@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants/routes";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -17,12 +18,12 @@ export async function getSessionOrNull() {
   return session;
 }
 
-export async function requireUser() {
+export async function requireUserInPage() {
   try {
     const session = await getSessionServer();
     return session.user;
-  } catch (error) {
-    console.error(error);
-    redirect("/auth/signin");
+  } catch (_error) {
+    // console.error(error);
+    redirect(ROUTES.auth.signin.path);
   }
 }

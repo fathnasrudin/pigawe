@@ -1,4 +1,4 @@
-import { requireUser } from "@/features/auth/auth.service";
+import { getSessionServer } from "@/features/auth/auth.service";
 import { CreateProjectInput } from "./project.schema";
 import { prisma } from "@/lib/prisma";
 
@@ -23,7 +23,7 @@ export async function createProjectService({
 }: {
   data: CreateProjectInput;
 }) {
-  const user = await requireUser();
+  const { user } = await getSessionServer();
   // call business validation
   const newProject = createProjectDomain({ data, userId: user.id });
 
@@ -35,7 +35,7 @@ export async function createProjectService({
 }
 
 async function initiateDefaultProjectMigration() {
-  const user = await requireUser();
+  const { user } = await getSessionServer();
   // create default project
   console.log("creating default project...");
   const inbox = await createDefaultProject();
@@ -57,7 +57,7 @@ async function initiateDefaultProjectMigration() {
 }
 
 async function createDefaultProject() {
-  const user = await requireUser();
+  const { user } = await getSessionServer();
 
   // create default project
   const newDefaultProject = await prisma.project.create({
@@ -76,7 +76,7 @@ async function createDefaultProject() {
 }
 
 export async function getDefaultProjectService() {
-  const user = await requireUser();
+  const { user } = await getSessionServer();
 
   const existDefaultProject = await prisma.project.findFirst({
     where: { userId: user.id, isDefault: true },
@@ -89,7 +89,7 @@ export async function getDefaultProjectService() {
 }
 
 export async function getProjectsService() {
-  const user = await requireUser();
+  const { user } = await getSessionServer();
 
   const projects = await prisma.project.findMany({
     where: { userId: user.id },
@@ -99,7 +99,7 @@ export async function getProjectsService() {
 }
 
 export async function getProjectByIdService(projectId: string) {
-  const user = await requireUser();
+  const { user } = await getSessionServer();
   return prisma.project.findUnique({
     where: { id: projectId, userId: user.id },
   });
