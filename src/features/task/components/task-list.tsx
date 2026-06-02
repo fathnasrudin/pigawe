@@ -9,7 +9,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { CheckSquare2Icon, ChevronDown, FrownIcon } from "lucide-react";
+import { CheckSquare2Icon, ChevronDownIcon, FrownIcon } from "lucide-react";
 import { useFetchTasks } from "./task.hook";
 import {
   Collapsible,
@@ -106,12 +106,18 @@ export function TaskListWithSection({
     <div className="space-y-8 w-full">
       {sections.map((s) => (
         <section key={s.id}>
-          <Collapsible defaultOpen disabled={!s.isCollapsible}>
-            <CollapsibleTrigger>
+          <Collapsible
+            defaultOpen
+            disabled={!s.isCollapsible}
+            className="space-y-2"
+          >
+            <CollapsibleTrigger asChild>
               {s.title && (
-                <h2 className="flex items-center gap-4">
-                  <span>{s.title}</span>
-                  {s.isCollapsible && <ChevronDown />}
+                <h2 className="flex flex-1 w-full items-center gap-4 group">
+                  {s.title}
+                  {s.isCollapsible && (
+                    <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
+                  )}
                 </h2>
               )}
             </CollapsibleTrigger>
