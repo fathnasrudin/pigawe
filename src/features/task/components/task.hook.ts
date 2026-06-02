@@ -15,7 +15,7 @@ export function useFetchTasks(options?: {
   const queryClient = useQueryClient();
 
   return useQuery({
-    queryKey: QUERY_KEYS.tasks.options.buildKey(options),
+    queryKey: QUERY_KEYS.tasks.list(options),
 
     queryFn: async () => {
       const tasks = await fetchTasks(options);
@@ -44,11 +44,11 @@ export function useCreateTask() {
     // optimistic update
     onMutate: async (taskData, context) => {
       // cancel running update for this query key, to avoid overwrite optimistic update
-      await context.client.cancelQueries({ queryKey: QUERY_KEYS.tasks.key });
+      await context.client.cancelQueries({ queryKey: QUERY_KEYS.tasks.all });
 
       // snapshot for rollback
       const prevTasks = context.client.getQueryData<Task[]>(
-        QUERY_KEYS.tasks.key,
+        QUERY_KEYS.tasks.all,
       );
 
       const optimisticTask: Task = {
@@ -64,7 +64,7 @@ export function useCreateTask() {
 
       // set optimistic update
       context.client.setQueriesData(
-        { queryKey: QUERY_KEYS.tasks.key },
+        { queryKey: QUERY_KEYS.tasks.all },
         (old: Task[]) => (old ? [...old, optimisticTask] : [optimisticTask]),
       );
 
@@ -74,12 +74,12 @@ export function useCreateTask() {
     onError: async (error, taskData, onMutateResult, context) => {
       // kalo error, ganti lagi tasks yg optimistic dengan prev tasks
       context.client.setQueryData(
-        QUERY_KEYS.tasks.key,
+        QUERY_KEYS.tasks.all,
         onMutateResult?.prevTasks,
       );
     },
     onSettled: async (data, error, taskData, onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: QUERY_KEYS.tasks.key });
+      context.client.invalidateQueries({ queryKey: QUERY_KEYS.tasks.all });
     },
   });
 }
@@ -89,16 +89,16 @@ export function useDeleteTask() {
     mutationFn: deleteTaskClient,
     onMutate: async (taskId, context) => {
       // cancel running update for this query key, to avoid overwrite optimistic update
-      await context.client.cancelQueries({ queryKey: QUERY_KEYS.tasks.key });
+      await context.client.cancelQueries({ queryKey: QUERY_KEYS.tasks.all });
 
       // snapshot for rollback
       const prevTasks =
-        context.client.getQueryData<Task[]>(QUERY_KEYS.tasks.key) || [];
+        context.client.getQueryData<Task[]>(QUERY_KEYS.tasks.all) || [];
 
       const optimisticTasks: Task[] = prevTasks?.filter((t) => t.id !== taskId);
 
       // set optimistic update
-      context.client.setQueryData(QUERY_KEYS.tasks.key, optimisticTasks);
+      context.client.setQueryData(QUERY_KEYS.tasks.all, optimisticTasks);
 
       // old data untuk rollback
       return { prevTasks };
@@ -106,12 +106,12 @@ export function useDeleteTask() {
     onError(error, variables, onMutateResult, context) {
       // rollback
       context.client.setQueryData(
-        QUERY_KEYS.tasks.key,
+        QUERY_KEYS.tasks.all,
         onMutateResult?.prevTasks,
       );
     },
     onSettled: async (data, error, taskData, onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: QUERY_KEYS.tasks.key });
+      context.client.invalidateQueries({ queryKey: QUERY_KEYS.tasks.all });
     },
   });
 }
@@ -129,35 +129,43 @@ export function useToggleTask() {
       return updateTaskClient({ taskId, data: { status: newStatus } });
     },
     onMutate: async ({ taskId, data }, context) => {
-      await context.client.cancelQueries({ queryKey: QUERY_KEYS.tasks.key });
+      await context.client.cancelQueries({ queryKey: QUERY_KEYS.tasks.all });
 
       // snapshot
-      const prevTasks =
-        context.client.getQueryData<Task[]>(QUERY_KEYS.tasks.key) || [];
-
-      // optimistic
-      const newTasks = prevTasks.map((t) => {
-        if (t.id === taskId) {
-          const newStatus = data.status === "todo" ? "done" : "todo";
-          t.status = newStatus;
-        }
-        return t;
+      const prevQueriesData = context.client.getQueriesData<Task[]>({
+        queryKey: QUERY_KEYS.tasks.all,
       });
 
-      // set optimistic
-      context.client.setQueryData(QUERY_KEYS.tasks.key, newTasks);
+      prevQueriesData.map((queryData) => {
+        const [queryKey, prevTasks] = queryData;
 
-      // return snapshot for rollback
-      return { prevTasks };
+        // optimistic
+        const newTasks =
+          prevTasks?.map((t) => {
+            if (t.id === taskId) {
+              const newStatus = data.status === "todo" ? "done" : "todo";
+              t.status = newStatus;
+            }
+            return t;
+          }) || [];
+
+        // set optimistic
+        context.client.setQueryData(queryKey, newTasks);
+      });
+
+      return { prevQueriesData };
     },
     onError(error, variables, onMutateResult, context) {
-      context.client.setQueryData(
-        QUERY_KEYS.tasks.key,
-        onMutateResult?.prevTasks,
-      );
+      console.log(error);
+      onMutateResult?.prevQueriesData.map((queryData) => {
+        const [queryKey, prevTasks] = queryData;
+
+        // rollback optimistic
+        context.client.setQueryData(queryKey, prevTasks);
+      });
     },
     onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tasks.key });
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tasks.all });
     },
   });
 }
