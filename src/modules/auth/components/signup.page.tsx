@@ -1,5 +1,5 @@
 import { ROUTES } from "@/constants/routes";
-import { SignupForm } from "@/features/auth/components/signup-form";
+import { SignupForm } from "@/modules/auth/components/signup-form";
 import { redirect } from "next/navigation";
 import { getSessionOrNull } from "../auth.service";
 

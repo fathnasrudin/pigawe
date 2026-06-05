@@ -1,4 +1,4 @@
-import { SignInForm } from "@/features/auth/components/signin-form";
+import { SignInForm } from "@/modules/auth/components/signin-form";
 import { getSessionOrNull } from "../auth.service";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/constants/routes";
