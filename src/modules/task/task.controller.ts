@@ -1,12 +1,12 @@
 import {
   createTaskInputSchema,
   taskSearchParamsSchema,
-} from "@/features/task/task.schema";
-import { createTask, getTasks } from "@/features/task/task.service";
+} from "@/modules/task/task.schema";
+import { createTask, getTasks } from "@/modules/task/task.service";
 import { badApiResponse, goodApiResponse } from "@/lib/next-api-response";
 import { NextRequest } from "next/server";
-import { Task, updateTaskInputSchema } from "@/features/task/task.schema";
-import { deleteTask, updateTask } from "@/features/task/task.service";
+import { Task, updateTaskInputSchema } from "@/modules/task/task.schema";
+import { deleteTask, updateTask } from "@/modules/task/task.service";
 
 export async function getTasksController(req: NextRequest) {
   try {

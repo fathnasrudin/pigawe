@@ -1,4 +1,4 @@
-import { TaskSearchParamsSchema } from "@/features/task/task.schema";
+import { TaskSearchParamsSchema } from "@/modules/task/task.schema";
 import { addDays, startOfDay } from "date-fns";
 import { TaskFindManyArgs } from "../../../generated/prisma/models";
 
