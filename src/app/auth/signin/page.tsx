@@ -1,3 +1,3 @@
-import { SignInPage } from "@/features/auth/components/signin.page";
+import { SignInPage } from "@/modules/auth/components/signin.page";
 
 export default SignInPage;
