@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { WhatsNewProvider } from "@/features/whats-new/components/whats-new-provider";
+import { WhatsNewProvider } from "@/modules/whats-new/components/whats-new-provider";
 import { QueryClientProvider } from "@/lib/tanstack-query/query-client.provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TooltipProvider } from "@/components/ui/tooltip";

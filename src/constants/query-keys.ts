@@ -1,4 +1,4 @@
-import { TaskSearchParamsSchema } from "@/features/task/task.schema";
+import { TaskSearchParamsSchema } from "@/modules/task/task.schema";
 
 export const QUERY_KEYS = {
   tasks: {

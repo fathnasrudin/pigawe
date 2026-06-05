@@ -1,4 +1,4 @@
-import { getSessionOrNull } from "@/features/auth/auth.service";
+import { getSessionOrNull } from "@/modules/auth/auth.service";
 import { SignoutButton } from "./signout-button";
 
 export default async function ProtectedPage() {

@@ -1,8 +1,8 @@
 "use client";
 
-import { TaskForm } from "@/features/task/components/task-form";
-import { TaskListWithFetch } from "@/features/task/components/task-list";
-import { useFetchTasks } from "@/features/task/components/task.hook";
+import { TaskForm } from "@/modules/task/components/task-form";
+import { TaskListWithFetch } from "@/modules/task/components/task-list";
+import { useFetchTasks } from "@/modules/task/components/task.hook";
 
 export default function TasksPage() {
   const fetchTasks = useFetchTasks({});

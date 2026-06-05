@@ -1,2 +1,2 @@
-import { ChangelogPage } from "@/features/whats-new/components/changelog.page";
+import { ChangelogPage } from "@/modules/whats-new/components/changelog.page";
 export default ChangelogPage;

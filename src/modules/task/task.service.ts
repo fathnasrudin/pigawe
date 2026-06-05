@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { getSessionServer } from "../auth/auth.service";
+import { getSessionServer } from "@/modules/auth/auth.service";
 import {
   createTaskInputSchema,
   TaskSearchParamsSchema,

@@ -1,4 +1,4 @@
-import { getSessionServer } from "@/features/auth/auth.service";
+import { getSessionServer } from "@/modules/auth/auth.service";
 import { CreateProjectInput } from "./project.schema";
 import { prisma } from "@/lib/prisma";
 
