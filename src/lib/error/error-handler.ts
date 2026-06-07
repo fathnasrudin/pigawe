@@ -21,3 +21,13 @@ export function errorHandler(error: unknown) {
   const statusCode = 500;
   return Response.json(response, { status: statusCode });
 }
+
+export function clientErrorHandler(error: unknown) {
+  if (error instanceof Error) {
+    console.error("Global Error Handler: ", error.message);
+    return;
+  }
+  // if error instanceof ApiError handle switch case based on code
+
+  return console.error("Something went wrong. Refresh the app");
+}
