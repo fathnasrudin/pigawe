@@ -1,25 +1,41 @@
-type BadResponse = {
-  message: string;
-  statusText: string;
-  errors?: Record<string, string[]>;
-};
+import { ZodError } from "zod";
+import type { BadResponse } from "../response";
 
-export function errorHandler(error: unknown) {
-  if (error instanceof Error) {
-    const response: BadResponse = {
-      statusText: "INTERNAL_SERVER_ERROR",
-      message: error.message,
+function normalizeErrorResponse(error: unknown): {
+  response: BadResponse;
+  statusCode: number;
+} {
+  // validation error
+  if (error instanceof ZodError) {
+    return {
+      statusCode: 400,
+      response: {
+        success: false,
+        error: {
+          code: "VALIDATION_ERROR",
+          message: error.message,
+        },
+      },
     };
-    const statusCode = 500;
-    return Response.json(response, { status: statusCode });
   }
 
-  const response: BadResponse = {
-    statusText: "INTERNAL_SERVER_ERROR",
-    message: "Internal server error",
+  return {
+    response: {
+      success: false,
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal Server Error",
+      },
+    },
+    statusCode: 500,
   };
-  const statusCode = 500;
-  return Response.json(response, { status: statusCode });
+}
+
+export function errorHandler(error: unknown) {
+  const { response, statusCode } = normalizeErrorResponse(error);
+  return Response.json(response, {
+    status: statusCode,
+  });
 }
 
 export function clientErrorHandler(error: unknown) {
