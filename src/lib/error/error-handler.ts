@@ -1,5 +1,7 @@
 import { ZodError } from "zod";
 import type { BadResponse } from "../response";
+import { AppError } from "./error";
+import { ClientFetchError } from "./client-error";
 
 function normalizeErrorResponse(error: unknown): {
   response: BadResponse;
@@ -15,6 +17,16 @@ function normalizeErrorResponse(error: unknown): {
           code: "VALIDATION_ERROR",
           message: error.message,
         },
+      },
+    };
+  }
+
+  if (error instanceof AppError) {
+    return {
+      statusCode: error.statusCode,
+      response: {
+        success: false,
+        error: { code: error.code, message: error.message },
       },
     };
   }
@@ -39,11 +51,12 @@ export function errorHandler(error: unknown) {
 }
 
 export function clientErrorHandler(error: unknown) {
+  if (error instanceof ClientFetchError) {
+    console.error("ClientFetchError", error);
+  }
+
   if (error instanceof Error) {
-    console.error("Global Error Handler: ", error.message);
+    console.error(error);
     return;
   }
-  // if error instanceof ApiError handle switch case based on code
-
-  return console.error("Something went wrong. Refresh the app");
 }

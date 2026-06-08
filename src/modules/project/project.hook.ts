@@ -2,10 +2,17 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   CreateProjectInput,
   getProjectsSchema,
+  Project,
   projectSchema,
 } from "./project.schema";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { ROUTES } from "@/constants/routes";
+import { ClientFetchError } from "@/lib/error/client-error";
+import {
+  ApiResponse,
+  ListDataGoodResponse,
+  SingleDataGoodResponse,
+} from "@/lib/response";
 
 export function useCreateProject() {
   return useMutation({
@@ -32,14 +39,20 @@ export async function fetchProjects() {
   const response = await fetch(ROUTES.api.me.projects.path, {
     method: "get",
   });
+  const body: ApiResponse<ListDataGoodResponse<Project>> =
+    await response.json();
 
   // should handle error
-  if (!response.ok) {
-    throw new Error("Something when wrong in the server?");
+  if (!body.success) {
+    throw new ClientFetchError(
+      response.status,
+      body.error.code,
+      body.error.message,
+    );
   }
 
   // type result manual, next with zod validation
-  const result: { success: true; data: unknown } = await response.json();
+  const result: { success: true; data: unknown } = await body;
   const projects = getProjectsSchema.parse(result.data);
 
   return projects;
@@ -64,13 +77,20 @@ export function useFetchProjectById(projectId: string) {
         },
       );
 
+      const body: ApiResponse<SingleDataGoodResponse<Project>> =
+        await response.json();
+
       // should handle error
-      if (!response.ok) {
-        throw new Error("Something when wrong in the server?");
+      if (!body.success) {
+        throw new ClientFetchError(
+          response.status,
+          body.error.code,
+          body.error.message,
+        );
       }
 
       // type result manual, next with zod validation
-      const result: { success: true; data: unknown } = await response.json();
+      const result = body;
       return projectSchema.parse(result.data);
     },
   });
