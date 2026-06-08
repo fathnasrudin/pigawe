@@ -1,3 +1,4 @@
+import { badApiResponse } from "@/lib/next-api-response";
 import { createProjectSchema } from "@/modules/project/project.schema";
 import {
   createProjectService,
@@ -21,21 +22,21 @@ export async function createProjectRoute(req: Request) {
     // return the created project
     return Response.json({ success: true, data: result });
   } catch (error) {
-    // serahin ke error handler
-    return Response.json({
-      success: false,
-      message: "Something wen wrong",
-    });
+    return badApiResponse(error);
   }
 }
 
 export async function getProjectsRoute() {
-  const projects = await getProjectsService();
+  try {
+    const projects = await getProjectsService();
 
-  return Response.json({
-    success: true,
-    data: projects,
-  });
+    return Response.json({
+      success: true,
+      data: projects,
+    });
+  } catch (error) {
+    return badApiResponse(error);
+  }
 }
 
 export async function getProjectByIdRoute(
@@ -55,23 +56,19 @@ export async function getProjectByIdRoute(
       data: project,
     });
   } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message: "Something went wrong",
-      },
-      { status: 500 },
-    );
+    return badApiResponse(error);
   }
 }
 
 export async function getDefaultProjectRoute() {
-  const project = await getDefaultProjectService();
+  try {
+    const project = await getDefaultProjectService();
 
-  return Response.json({
-    success: true,
-    data: project,
-  });
+    return Response.json({
+      success: true,
+      data: project,
+    });
+  } catch (error) {
+    return badApiResponse(error);
+  }
 }

@@ -1,3 +1,5 @@
+import { errorHandler } from "./error/error-handler";
+
 type Options = {
   status?: number;
 };
@@ -9,12 +11,5 @@ export function goodApiResponse<T = void>(data: T, options?: Options) {
 }
 
 export function badApiResponse(error: unknown) {
-  console.error(error);
-
-  return Response.json(
-    {},
-    {
-      status: 400,
-    },
-  );
+  return errorHandler(error);
 }

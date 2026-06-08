@@ -1,6 +1,7 @@
 import { getSessionServer } from "@/modules/auth/auth.service";
 import { CreateProjectInput } from "./project.schema";
 import { prisma } from "@/lib/prisma";
+import { NotFoundError } from "@/lib/error/error";
 
 export function createProjectDomain({
   data,
@@ -100,7 +101,13 @@ export async function getProjectsService() {
 
 export async function getProjectByIdService(projectId: string) {
   const { user } = await getSessionServer();
-  return prisma.project.findUnique({
+  const project = await prisma.project.findUnique({
     where: { id: projectId, userId: user.id },
   });
+
+  if (!project) {
+    throw new NotFoundError("PROJECT_NOT_FOUND", "Project not found");
+  }
+
+  return project;
 }
